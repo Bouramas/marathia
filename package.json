@@ -1,10 +1,32 @@
 {
   "name": "marathia",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Marathia Tinos — Vue 3 rebuild (restaurant, guesthouse, gastrotourism)",
+  "type": "module",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc -b --noEmit",
+    "extract": "node scripts/extract-content.mjs"
   },
-  "private": true
+  "dependencies": {
+    "@fontsource/karla": "^5.1.0",
+    "@fontsource/open-sans": "^5.1.0",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.13",
+    "vue-i18n": "^10.0.5",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^22.20.5",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.3",
+    "vite-plugin-sitemap": "^0.7.1",
+    "vue-tsc": "^2.1.10"
+  }
 }

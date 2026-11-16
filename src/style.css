@@ -1,0 +1,102 @@
+@import 'tailwindcss';
+
+/* Self-hosted fonts (no Google Fonts CDN — keeps visitor IPs off Google, GDPR). */
+@import '@fontsource/open-sans/400.css';
+@import '@fontsource/open-sans/600.css';
+@import '@fontsource/open-sans/700.css';
+@import '@fontsource/karla/400.css';
+@import '@fontsource/karla/500.css';
+
+/*
+  Brand tokens carried over from the old Attika/Mikado WordPress theme.
+  Source: themes/attika/assets/css/style_dynamic.css, wp_options.mkdf_options_attika,
+  uploads/custom-css-js/3428.css. The redesign is modern; the identity is the same.
+*/
+@theme {
+  --color-brand: #c9a15b; /* logo gold wordmark — primary accent */
+  --color-brand-dark: #a9834a;
+  --color-ink: #111111; /* dark text */
+  --color-page: #f5f7f8; /* page background */
+  --color-cream: #faf5f0; /* reservation card / warm sections */
+  --color-cream-2: #f6efe6;
+  --color-cream-3: #f8f2ed;
+  --color-cream-4: #fef8f7;
+  --color-footer: #eaeaea; /* footer bottom bar */
+  --color-rule: #a1a1a1; /* decorative divider rule */
+  --color-link: #0061ba; /* live link hover color */
+
+  --font-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-label: 'Karla', 'Open Sans', sans-serif;
+
+  --tracking-label: 0.5em; /* signature wide uppercase label tracking */
+  --tracking-heading: 0.3em;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-page text-ink font-sans antialiased;
+  }
+}
+
+@utility display {
+  /* Signature Attika look: uppercase display heading. Applied explicitly to
+     hero/section/page titles — NOT globally, so body copy and content headings
+     stay readable. Tracking is set per-title via tracking-* utilities so it can
+     be tightened on small screens (wide tracking overflows narrow viewports). */
+  @apply font-sans font-normal uppercase;
+}
+
+@layer components {
+  /* Signature uppercase, wide-tracked Karla label. Tracking narrows on small
+     screens to avoid horizontal overflow of long Greek labels. */
+  .label-kicker {
+    font-family: var(--font-label);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-size: 0.8125rem;
+  }
+  @media (min-width: 768px) {
+    .label-kicker {
+      letter-spacing: var(--tracking-label);
+      font-size: 0.875rem;
+    }
+  }
+  /* Section title with the short decorative rule from the old theme. */
+  .section-rule::before {
+    content: '';
+    display: block;
+    width: 35px;
+    height: 1px;
+    background-color: var(--color-rule);
+    margin: 0 auto 1.5rem;
+  }
+  /* RichText-rendered body copy. */
+  .prose-marathia :where(p) {
+    @apply mb-4 leading-relaxed;
+  }
+  .prose-marathia :where(a) {
+    @apply text-link underline-offset-2 hover:underline;
+  }
+  .prose-marathia :where(h2) {
+    @apply mt-10 mb-4 text-xl font-semibold text-ink;
+  }
+  .prose-marathia :where(h3) {
+    @apply mt-8 mb-3 text-lg font-semibold text-ink;
+  }
+  .prose-marathia :where(figure img) {
+    @apply mx-auto;
+  }
+  .prose-marathia :where(ul) {
+    @apply mb-4 list-disc pl-6;
+  }
+  .prose-marathia :where(figure) {
+    @apply my-6;
+  }
+  .prose-marathia :where(img) {
+    @apply rounded-sm;
+  }
+}
