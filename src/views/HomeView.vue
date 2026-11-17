@@ -9,8 +9,6 @@ import DotSeparator from '@/components/DotSeparator.vue'
 import HomeIntro from '@/components/HomeIntro.vue'
 import HomeBand from '@/components/HomeBand.vue'
 import AwardsPanel from '@/components/AwardsPanel.vue'
-import SectionTitle from '@/components/SectionTitle.vue'
-import BaseButton from '@/components/BaseButton.vue'
 import DraftTranslationNotice from '@/components/DraftTranslationNotice.vue'
 
 const { t } = useI18n()
@@ -66,18 +64,6 @@ useSeo(() => ({
       :tint="band.tint"
     />
     </template>
-
-    <!-- Opening hours -->
-    <section class="py-12 lg:py-20">
-      <div class="mx-auto max-w-4xl px-6 text-center lg:px-10">
-        <SectionTitle :title="t('home.hours')" />
-        <p class="text-lg text-ink/80">{{ t('home.restaurantHours') }}</p>
-        <p class="mt-1 text-lg text-ink/80">{{ t('home.breakfastHours') }}</p>
-        <div class="mt-8">
-          <BaseButton :to="pathForKey('contact-us', locale) || '#'">{{ t('home.bookTable') }}</BaseButton>
-        </div>
-      </div>
-    </section>
 
     <!-- Awards -->
     <AwardsPanel v-if="homeAwards.length" :awards="homeAwards" />

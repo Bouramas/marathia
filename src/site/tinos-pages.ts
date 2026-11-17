@@ -36,7 +36,7 @@ export const tinos = {
     'Δείτε την Τήνο όπως η ομάδα της Μαραθιάς -γι\' αυτό άλλωστε έχουμε δημιουργήσει και ειδικές προτάσεις δράσεων που αφορούν τον γαστροτουρισμό.',
     'Travel around the beautiful and authentic Cycladic island of Tinos, where nature and artistry intertwine.',
   ),
-  image: PH.landscape,
+  image: '/assets/pictures/tinos/peristeronas.jpg',
   sections: [
     {
       id: 'marble',

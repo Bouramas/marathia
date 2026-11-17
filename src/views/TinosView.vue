@@ -7,6 +7,7 @@ import { pageByKey, pathForKey } from '@/composables/usePages'
 import { useLocale } from '@/composables/useLocale'
 import { useSeo } from '@/composables/useSeo'
 import { tinos } from '@/site/tinos-pages'
+import { tinosPath, tinosViewBox } from '@/site/tinos-shape'
 import DotSeparator from '@/components/DotSeparator.vue'
 import BaseButton from '@/components/BaseButton.vue'
 
@@ -34,10 +35,10 @@ useSeo(() => {
 <template>
   <article>
     <header class="bg-cream">
-      <div class="mx-auto grid max-w-7xl items-center gap-8 px-6 py-10 lg:grid-cols-[1.3fr_1fr] lg:gap-16 lg:px-10 lg:py-14">
-        <div>
+      <div class="mx-auto grid max-w-6xl items-center gap-8 px-6 py-10 lg:grid-cols-2 lg:gap-10 lg:px-10 lg:py-14">
+        <div class="relative z-10">
           <p class="label-kicker mb-5 text-brand">{{ pick(tinos.heading) }}</p>
-          <h1 class="display text-3xl tracking-[0.08em] sm:text-4xl md:tracking-[0.18em] lg:text-5xl">
+          <h1 class="display text-3xl tracking-[0.08em] sm:text-4xl md:tracking-[0.18em] lg:text-4xl lg:tracking-[0.12em] xl:text-5xl xl:tracking-[0.14em]">
             {{ page ? pick(page.title) : t('nav.tinos') }}
           </h1>
           <span class="mt-6 block h-px w-14 bg-brand"></span>
@@ -45,9 +46,20 @@ useSeo(() => {
             {{ pick(tinos.lead) }}
           </p>
         </div>
-        <div class="mx-auto w-full max-w-[320px] overflow-hidden rounded-t-[999px] rounded-b-sm lg:max-w-[400px]">
-          <img :src="tinos.image" alt="" loading="eager" class="aspect-[3/4] w-full object-cover" />
-        </div>
+        <svg :viewBox="tinosViewBox" class="mx-auto w-full max-w-[560px] lg:mx-0 lg:ml-[calc(100%-640px)] lg:w-[640px] lg:max-w-none" aria-hidden="true">
+          <defs>
+            <clipPath id="tinos-shape"><path :d="tinosPath" /></clipPath>
+          </defs>
+          <image
+            :href="tinos.image"
+            x="120"
+            y="35"
+            width="680"
+            height="453"
+            preserveAspectRatio="xMidYMid slice"
+            clip-path="url(#tinos-shape)"
+          />
+        </svg>
       </div>
     </header>
 
