@@ -15,6 +15,12 @@ export interface HomeBand {
   /** Content key for the "read more" target (resolved per locale). */
   ctaKey: string
   ctaLabel: Localized
+  /** Optional extra links (content keys) shown as an elegant list instead of the single CTA. */
+  links?: { key: string; label: Localized }[]
+  /** Portrait crop with an offset gold outline. */
+  framed?: boolean
+  /** Arched top on the framed image. */
+  arch?: boolean
   /** Image on the right (text on the left) from lg up. */
   reverse?: boolean
   /** Warm cream background band, for vertical rhythm. */
@@ -23,32 +29,18 @@ export interface HomeBand {
 
 export const homeBands: HomeBand[] = [
   {
-    id: 'philosophy',
-    kicker: { el: 'Μαραθιά', en: 'Marathia' },
-    title: {
-      el: '«Ό,τι βγάζει η Τήνος να είναι στο τραπέζι μας»',
-      en: '“Our tables should be filled with everything Tinos produces”',
-    },
-    body: {
-      el: 'Καλωσήρθατε στο εστιατόριο και τα διαμερίσματα της Μαραθιάς στην παραλία του Αγίου Φωκά της Τήνου. Μια οικογενειακή επιχείρηση που λειτουργεί εδώ και 23 χρόνια στο νησί, προσφέροντας αυθεντική φιλοξενία και αξέχαστα γευστικά ταξίδια.',
-      en: 'Welcome to Marathia’s restaurant and apartments which enjoy the perfect location on Agios Fokas beach in Tinos. Our family-run business has been operating for 23 years, offering authentic hospitality and taking diners on an unforgettable journey through the island’s cuisine.',
-    },
-    image: '/assets/uploads/2024/12/new-orthia-filosofia-831x1274-1.jpg',
-    ctaKey: 'about/i-filosofia-mas',
-    ctaLabel: { el: 'Διαβάστε περισσότερα', en: 'Read more' },
-  },
-  {
     id: 'maturation',
-    kicker: { el: 'Ωρίμανση ψαριών', en: 'Fish ageing' },
+    kicker: { el: 'Ωρίμανση ψαριών', en: 'Fish aging' },
     title: {
       el: 'Πρωτοπορία στην ωρίμανση ψαριών',
-      en: 'Pioneers in fish ageing',
+      en: 'Pioneers in fish aging',
     },
     body: {
       el: 'Η Μαραθιά πρωτοπορεί στην Ελλάδα στην ωρίμανση ψαριών χάρη σε διαρκές R&D και ενδελεχή έρευνα του ιδιοκτήτη της, Μαρίνου Σουράνη, που ξεκίνησε από το 2010. Τον Ιούνιο του 2025 εκδόθηκε το βιβλίο του «Ψάρια και Ωρίμανση» από τις εκδόσεις Νεφέλη.',
-      en: 'Marathia is the Greek leader in fish ageing techniques thanks to the continuous R&D and thorough research that the owner, Marinos Souranis, began in 2010. In June 2025 his book “Fish and Ageing” was published by Nefeli.',
+      en: 'Marathia is the Greek leader in fish aging techniques thanks to the continuous R&D and thorough research that the owner, Marinos Souranis, began in 2010. In June 2025 his book “Fish and Aging” was published by Nefeli.',
     },
-    image: '/assets/uploads/2025/01/orimansi-arxiki.jpg',
+    image: '/assets/pictures/dining/dark_plate.jpg',
+    framed: true,
     ctaKey: 'orimansi-psarion',
     ctaLabel: { el: 'Διαβάστε περισσότερα', en: 'Read more' },
     reverse: true,
@@ -65,7 +57,13 @@ export const homeBands: HomeBand[] = [
       el: 'Η Μαραθιά διοργανώνει βιωματικά εργαστήρια για επαγγελματίες της γαστρονομίας, καθώς και προγράμματα γαστροτουρισμού, και προσφέρει συμβουλευτική σε εστιατόρια από την Ελλάδα και το εξωτερικό.',
       en: 'Marathia organises experiential workshops for culinary professionals, as well as gastrotourism programmes, and provides consulting services for restaurants in Greece and abroad.',
     },
-    image: '/assets/uploads/2025/01/seminars.jpg',
+    image: '/assets/pictures/dining/dish_4.jpg',
+    framed: true,
+    links: [
+      { key: 'biomatika-ergastiria-gia-epangelmaties', label: { el: 'Εργαστήρια', en: 'Workshops' } },
+      { key: 'seminaria-gastrotourismou', label: { el: 'Γαστροτουρισμός', en: 'Gastrotourism' } },
+      { key: 'symvouleftiki', label: { el: 'Συμβουλευτική', en: 'Consulting' } },
+    ],
     ctaKey: 'biomatika-ergastiria-gia-epangelmaties',
     ctaLabel: { el: 'Διαβάστε περισσότερα', en: 'Read more' },
   },
@@ -81,6 +79,8 @@ export const homeBands: HomeBand[] = [
       en: 'Marathia Guesthouse is a family business, known for its authentic and unpretentious hospitality, with suites and rooms designed in simple Cycladic architecture. It has been Green Key certified since 2016.',
     },
     image: '/assets/uploads/2024/12/rooms-in-800x451_DSC3501.jpg',
+    framed: true,
+    arch: true,
     ctaKey: 'forma-kratisis-domatiou',
     ctaLabel: { el: 'Κάντε κράτηση', en: 'Book now' },
     reverse: true,
@@ -97,7 +97,8 @@ export const homeBands: HomeBand[] = [
       el: 'Η ημέρα ξεκινάει με πρωινό στο μπουφέ της Μαραθιάς, με θέα στη θάλασσα: γλυκές και αλμυρές πίτες, φρούτα και φρέσκους χυμούς, τυριά και αλλαντικά της Τήνου, ζυμωτό ψωμί, χειροποίητες μαρμελάδες και μέλι.',
       en: 'The day starts with breakfast at the Marathia buffet with its view of the sea: sweet and savoury pies, fruit and fresh juices, cheeses and cold cuts from Tinos, sourdough bread, handmade jams and honey.',
     },
-    image: '/assets/uploads/2024/12/oti-vgazei-i-tinos1.jpg',
+    image: '/assets/pictures/dining/restaurant_a.jpg',
+    framed: true,
     ctaKey: 'souites-kai-domatia',
     ctaLabel: { el: 'Διαβάστε περισσότερα', en: 'Read more' },
   },
@@ -120,10 +121,51 @@ export const homeBands: HomeBand[] = [
   },
 ]
 
-/** Award badges shown in the logo strip near the foot of the homepage. */
-export const homeAwards: string[] = [
-  '/assets/uploads/2024/12/skoufoi-24.jpg',
-  '/assets/uploads/2024/12/scoufoi-2020.jpg',
-  '/assets/uploads/2024/12/fnl_2024.jpg',
-  '/assets/uploads/2024/12/2020.jpg',
-]
+/** Award badges: original images in public/assets/awards, framed uniformly by CSS in HomeView. */
+export const homeAwards: string[] = ['2019', '2020', 'skoufoi-2020', 'skoufoi-2024', 'fnl-2024'].map(
+  (n) => `/assets/awards/${n}.jpg`,
+)
+
+/** Text-only opening of the homepage (welcome + "everything Tinos produces" story). */
+export const homeIntro = {
+  intro: [
+    {
+      el: 'Καλωσήρθατε στο εστιατόριο και τα διαμερίσματα της Μαραθιάς στην παραλία του Αγίου Φωκά της Τήνου. Μια οικογενειακή επιχείρηση που λειτουργεί εδώ και 23 χρόνια στο νησί προσφέροντας αυθεντική φιλοξενία και αξέχαστα γευστικά ταξίδια.',
+      en: 'Welcome to Marathia’s restaurant and apartments which enjoy the perfect location on Agios Fokas beach in Tinos. Our family-run business has been operating for 23 years, and we take pride in offering authentic hospitality and taking diners on a wonderful and unforgettable journey through the island’s cuisine.',
+    },
+    {
+      el: 'Στο εστιατόριο της Μαραθιάς αναβιώνουμε με σεβασμό και ζωντανεύουμε ντόπιες γεύσεις και συνταγές, δίνοντάς τους νότες σημερινές και δημιουργικές. Η ψαροφαγία -με την ωρίμανση των ψαριών ως εξέλιξή της-, η τροφοσυλλογή, η υποστήριξη των τοπικών παραγωγών, η εποχικότητα, οι αρχές της ελαχιστοποίησης της απώλειας και της βιωσιμότητας, συνοψίζουν την ταυτότητά μας. Μάλιστα, η Μαραθιά είναι μέλος της Ευρωπαϊκής πρωτοβουλίας I stars, με στόχο τη μείωση του περιβαλλοντικού μας αποτυπώματος.',
+      en: 'At Marathia’s restaurant, we respect local dishes and recipes while invigorating and revitalising them by adding creative contemporary touches. Our philosophy and identity revolve around fish cuisine—including fish curing and aging as an extension of this —along with foraging, supporting local producers, using seasonal produce, and minimizing waste in line with sustainable practices. Marathia is also a member of the European I-STARS initiative, and is committed to reducing our environmental footprint.',
+    },
+  ] as Localized[],
+  storyTitle: {
+    el: 'Ό,τι βγάζει η Τήνος είναι στο τραπέζι μας',
+    en: 'Everything Tinos produces is on our table',
+  } as Localized,
+  story: [
+    {
+      el: 'Η Μαραθιά των γεύσεων δημιουργήθηκε το 2002 από τον Μαρίνο Σουράνη, με ένα όνειρο που ζωντανεύει κάθε μέρα και διαφορετικά: «Ό,τι βγάζει η Τήνος να είναι στο τραπέζι μας».',
+      en: 'Marathia was created in 2002 by Marinos Souranis, and his dream that “Our tables should be filled with everything Tinos produces” comes to life in a different way every day.',
+    },
+    {
+      el: 'Τα ψάρια και τα τυριά, τα λαχανικά, τα βότανα, ακόμα και τα όσπρια, προέρχονται από το νησί μας, την Τήνο, και κοντινά Κυκλαδονήσια. Στη Μαραθιά, παρέα με καλούς συνοδοιπόρους παραγωγούς, αναβιώνουμε με σεβασμό ό,τι έφτιαχναν και καλλιεργούσαν οι παλιοί, ζωντανεύουμε ντόπιες γεύσεις και συνταγές, δίνοντάς τους νότες σημερινές, δημιουργικές.',
+      en: 'Everything we serve - the fish and cheeses, vegetables, herbs, and even the legumes - come from our island, Tinos, and the nearby Cyclades. At Marathia we work with expert producers and we respectfully revitalise both the dishes made in the olden days and the produce grown in the past, bringing traditional recipes and dishes to life with a contemporary creative touch.',
+    },
+    {
+      el: 'Είμαστε, επίσης, πρωτοπόροι στην ωρίμανση ψαριών, για την οποία ο Μαρίνος εκδίδει ένα εμπεριστατωμένο βιβλίο.',
+      en: 'We are also pioneers in fish curing and aging, and Marinos is publishing a comprehensive book on the subject.',
+    },
+    {
+      el: 'Κάθε μέρα οι προτάσεις είναι διαφορετικές, ανάλογα με το τι έφερε το καΐκι, τι βρήκαμε στην τοπική αγορά, τι θησαυρούς ξετρυπώσαμε κάνοντας τροφοσυλλογή στο βουνό, τι ευωδιάζει στον βοτανόκαμπο.',
+      en: 'Our menu changes every day, depending on what the boat brought in, what we found at the local street market, what treasures we unearthed while foraging in the mountains and what smells best in the herb garden.',
+    },
+  ] as Localized[],
+  closing: {
+    el: 'Κάθε πρωί που ξημερώνει για τη Μαραθιά σημαίνει και ένα νέο γευστικό ταξίδι…',
+    en: 'Every morning that dawns at Marathia is a new culinary journey…',
+  } as Localized,
+  links: [
+    { key: 'about/i-istoria-mas', label: { el: 'Η ιστορία μας', en: 'Our history' } as Localized },
+    { key: 'about/i-filosofia-mas', label: { el: 'Η φιλοσοφία μας', en: 'Our philosophy' } as Localized },
+  ],
+}

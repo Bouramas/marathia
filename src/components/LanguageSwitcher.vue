@@ -35,7 +35,7 @@ function switchLang() {
     type="button"
     :aria-label="`Switch language to ${label}`"
     :title="label"
-    class="h-4 w-6 overflow-hidden rounded-[2px] ring-1 ring-black/10 opacity-90 transition hover:opacity-100 hover:ring-brand"
+    class="h-[17px] w-[25px] shrink-0 cursor-pointer overflow-hidden rounded-[3px] opacity-75 transition-opacity hover:opacity-100"
     @click="switchLang"
   >
     <FlagIcon :country="other === 'en' ? 'gb' : 'gr'" />

@@ -18,7 +18,7 @@ export const MENU: NavItem[] = [
     children: [
       { key: 'about/i-istoria-mas', label: { el: 'Η ιστορία μας', en: 'History' } },
       { key: 'about/i-filosofia-mas', label: { el: 'Η φιλοσοφία μας', en: 'Philosophy' } },
-      { key: 'orimansi-psarion', label: { el: 'Ωρίμανση ψαριών', en: 'Fish maturation' } },
+      { key: 'orimansi-psarion', label: { el: 'Ωρίμανση ψαριών', en: 'Fish aging' } },
     ],
   },
   {

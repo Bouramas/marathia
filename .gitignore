@@ -6,3 +6,5 @@ dist
 backup
 backup/*
 scripts/out
+.env.local
+.env.*.local

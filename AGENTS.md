@@ -160,9 +160,15 @@ home ×1, ~23 pages, 12 posts, 9 menu dishes, 6 testimonials, 51 portfolio items
   per locale at its real hierarchical slug** (el always; en only when `slug.en !==
   slug.el`), `/blog`, `/blog/:slug` per post, `/menu`, and a catch-all 404.
   `meta` carries `{ locale, pageKey, noindex }`.
-- Form pages render dedicated views: `forma-kratisis-domatiou` → `ReservationView`,
-  `contact-us` → `ContactView` (mapped by page key in `FORM_KINDS`). Everything else
-  → `ContentPageView`.
+- Pages with a dedicated view are mapped by page key in `VIEW_BY_KEY`:
+  `forma-kratisis-domatiou` → `ReservationView`, `contact-us` → `ContactView`,
+  `biomatika-ergastiria-gia-epangelmaties` → `WorkshopsView`, `seminaria-gastrotourismou` →
+  `GastrotourismView`, `symvouleftiki` → `ConsultingView` (copy hand-split verbatim in
+  `src/site/services-pages.ts`; edit there),   `i-tinos/me-mia-matia` → `TinosView`, `i-tinos/mi-chasete` → `AttractionsView`, `i-tinos/paralies` → `BeachesView` (copy + placeholder images in `src/site/tinos-pages.ts`), `about/i-istoria-mas` → `HistoryView` (timeline), `about/i-filosofia-mas` →
+  `PhilosophyView` (five principles), `orimansi-psarion` → `MaturationView` (story rows +
+  stats + book card). Everything else → `ContentPageView`. The three story pages have
+  no hero images (type-only headers; philosophy keeps its arched side image). Their
+  copy is hand-split verbatim in `src/site/about-pages.ts` (not generated); edit there.
 - Nav/footer are the **real DB menus** via `src/content/nav.ts` (consumed by
   `AppHeader.vue`/`AppFooter.vue`). Top-level items with children that don't resolve
   to a page are non-navigating dropdown headers (matches the live site).
@@ -193,6 +199,11 @@ server-side **301s** for any URL that changed. Not done yet.
 ---
 
 ## 8. Forms (STUBBED)
+
+**Contact page** (`ContactView.vue`) is hand-authored, with no form: details card + `BrandMap.vue`
+(plain keyless Google Maps embed iframe; no API key by decision). The page has no PageHeader; the
+DotSeparator sits at the end. Copy lives in i18n `contact.*`.
+`ContactForm.vue` is now unused.
 
 `src/stores/subscriptionForm.ts` → `submitForm(payload, endpoint?)`. With no
 `endpoint` it logs + simulates success (shows a success toast). `ReservationForm.vue`
@@ -251,7 +262,10 @@ src/
   site/routes.json            AUTO-GENERATED canonical paths (both locales)
   components/ + components/forms/
   composables/{useLocale,useSeo,usePages}.ts
-  views/*.vue                 Home, ContentPage, BlogList, Post, Menu, Reservation, Contact, NotFound
+  site/about-pages.ts         hand-authored sections for History/Philosophy/Maturation views
+  site/services-pages.ts      hand-authored sections for Workshops/Gastrotourism/Consulting views
+  site/tinos-pages.ts         hand-authored sections + entries for Tinos/Attractions/Beaches views (placeholder images in PH)
+  views/*.vue                 Home, ContentPage, BlogList, Post, Menu, Reservation, Contact, History, Philosophy, Maturation, NotFound
 ```
 **Do not hand-edit `src/content/*` or `src/site/routes.json`** — change the generator
 or the extractor and re-run the pipeline. (Curate the *source* copy downstream only
@@ -275,10 +289,10 @@ if you also keep the generator idempotent.)
 ## 12. Open follow-ups
 
 1. ~~**Homepage layout.**~~ **DONE.** `HomeView` now renders the live multi-section
-   layout as alternating image/text bands (`HomeBand.vue`) driven by hand-authored
-   data in `src/site/home-sections.ts` (philosophy, fish maturation, services,
+   layout: a text-only opening (`HomeIntro.vue`, data `homeIntro` in `home-sections.ts`: welcome + "everything Tinos produces" story + History/Philosophy links), then alternating image/text bands (`HomeBand.vue`) driven by hand-authored
+   data in `src/site/home-sections.ts` (philosophy, fish aging, services,
    guesthouse, delicacies, seaside), followed by an opening-hours strip, an awards
-   logo strip (`home-sections.ts` `homeAwards`), and the latest-news grid. Band copy
+   strip (`home-sections.ts` `homeAwards`, 5 original badges from `public/assets/awards/`, rendered by `AwardsPanel.vue`: cream rounded panel, title left, logos with thin vertical dividers; swipe row on mobile). The latest-news grid was removed from the homepage. Band copy
    is verbatim teaser text sliced from the `home` content body (both locales
    `enReviewed:true`); each band's CTA links to a content key via `pathForKey`. New
    i18n keys live under `home.*` in `src/i18n/index.ts`. The raw `home` body in

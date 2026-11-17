@@ -11,11 +11,6 @@ import retired from '@/site/retired.json'
 // the "at a glance" overview now served at /tinos).
 const RETIRED = retired as Record<string, string>
 
-// Slugs that render a dedicated view instead of the generic content page.
-const FORM_KINDS: Record<string, 'reservation' | 'contact'> = {
-  'forma-kratisis-domatiou': 'reservation',
-  'contact-us': 'contact',
-}
 
 const ContentPageView = () => import('@/views/ContentPageView.vue')
 const HomeView = () => import('@/views/HomeView.vue')
@@ -24,13 +19,35 @@ const PostView = () => import('@/views/PostView.vue')
 const MenuView = () => import('@/views/MenuView.vue')
 const ReservationView = () => import('@/views/ReservationView.vue')
 const ContactView = () => import('@/views/ContactView.vue')
+const HistoryView = () => import('@/views/HistoryView.vue')
+const PhilosophyView = () => import('@/views/PhilosophyView.vue')
+const MaturationView = () => import('@/views/MaturationView.vue')
+const WorkshopsView = () => import('@/views/WorkshopsView.vue')
+const GastrotourismView = () => import('@/views/GastrotourismView.vue')
+const ConsultingView = () => import('@/views/ConsultingView.vue')
+const TinosView = () => import('@/views/TinosView.vue')
+const AttractionsView = () => import('@/views/AttractionsView.vue')
+const BeachesView = () => import('@/views/BeachesView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
 
+// Content keys that render a dedicated, hand-designed view instead of the
+// generic content page.
+const VIEW_BY_KEY: Record<string, () => Promise<unknown>> = {
+  'forma-kratisis-domatiou': ReservationView,
+  'contact-us': ContactView,
+  'about/i-istoria-mas': HistoryView,
+  'about/i-filosofia-mas': PhilosophyView,
+  'orimansi-psarion': MaturationView,
+  'biomatika-ergastiria-gia-epangelmaties': WorkshopsView,
+  'seminaria-gastrotourismou': GastrotourismView,
+  symvouleftiki: ConsultingView,
+  'i-tinos/me-mia-matia': TinosView,
+  'i-tinos/mi-chasete': AttractionsView,
+  'i-tinos/paralies': BeachesView,
+}
+
 function componentFor(page: PageContent) {
-  const kind = FORM_KINDS[page.key]
-  if (kind === 'reservation') return ReservationView
-  if (kind === 'contact') return ContactView
-  return ContentPageView
+  return VIEW_BY_KEY[page.key] ?? ContentPageView
 }
 
 /** Canonical path for a content item in a locale (el at clean root, en under /en/). */

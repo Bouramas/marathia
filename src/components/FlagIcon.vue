@@ -7,7 +7,7 @@ defineProps<{ country: 'gr' | 'gb' }>()
   <svg
     v-if="country === 'gr'"
     viewBox="0 0 27 18"
-    class="h-full w-full"
+    class="h-full w-full" preserveAspectRatio="xMidYMid slice"
     aria-hidden="true"
   >
     <rect width="27" height="18" fill="#0d5eaf" />
@@ -21,7 +21,7 @@ defineProps<{ country: 'gr' | 'gb' }>()
     <rect x="4" width="2" height="10" fill="#fff" />
     <rect y="4" width="10" height="2" fill="#fff" />
   </svg>
-  <svg v-else viewBox="0 0 60 30" class="h-full w-full" aria-hidden="true">
+  <svg v-else viewBox="0 0 60 30" class="h-full w-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <clipPath id="gb-clip"><rect width="60" height="30" /></clipPath>
     <g clip-path="url(#gb-clip)">
       <rect width="60" height="30" fill="#012169" />

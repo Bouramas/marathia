@@ -7,7 +7,7 @@ const props = withDefaults(
     to?: string
     href?: string
     type?: 'button' | 'submit'
-    variant?: 'solid' | 'outline'
+    variant?: 'solid' | 'outline' | 'hero'
     disabled?: boolean
   }>(),
   { type: 'button', variant: 'solid', disabled: false },
@@ -15,9 +15,8 @@ const props = withDefaults(
 
 const classes = computed(() => [
   'inline-flex items-center justify-center px-7 py-3 label-kicker transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
-  props.variant === 'solid'
-    ? 'bg-brand text-white hover:bg-brand-dark'
-    : 'border border-ink text-ink hover:bg-ink hover:text-white',
+  'hero-btn border-2 border-brand bg-transparent font-semibold',
+  props.variant === 'hero' ? 'text-white' : 'text-black',
 ])
 </script>
 
@@ -32,3 +31,31 @@ const classes = computed(() => [
     <slot />
   </button>
 </template>
+
+<style scoped>
+.hero-btn {
+  --btn-fill: rgb(255 255 255 / 0.16);
+  background-image: linear-gradient(var(--btn-fill), var(--btn-fill));
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100% 0%;
+  transition:
+    background-size 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.hero-btn:not(.text-white) {
+  --btn-fill: rgb(201 161 91 / 0.22);
+}
+.hero-btn:hover,
+.hero-btn:focus-visible {
+  background-size: 100% 100%;
+}
+.hero-btn:active {
+  transform: scale(0.98);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-btn {
+    transition-duration: 0.01ms;
+  }
+}
+</style>

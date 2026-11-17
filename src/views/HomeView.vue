@@ -1,26 +1,20 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useLocale } from '@/composables/useLocale'
-import { home, pathForKey, posts } from '@/composables/usePages'
+import { home, pathForKey } from '@/composables/usePages'
 import { useSeo } from '@/composables/useSeo'
-import { homeBands, homeAwards } from '@/site/home-sections'
+import { homeBands, homeAwards, homeIntro } from '@/site/home-sections'
 import HeroSection from '@/components/HeroSection.vue'
+import DotSeparator from '@/components/DotSeparator.vue'
+import HomeIntro from '@/components/HomeIntro.vue'
 import HomeBand from '@/components/HomeBand.vue'
+import AwardsPanel from '@/components/AwardsPanel.vue'
 import SectionTitle from '@/components/SectionTitle.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import DraftTranslationNotice from '@/components/DraftTranslationNotice.vue'
 
 const { t } = useI18n()
 const { locale, pick } = useLocale()
-
-const latestPosts = computed(() =>
-  [...posts]
-    .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
-    .slice(0, 3)
-    .map((p) => ({ key: p.key, title: pick(p.title), image: p.hero?.image, href: pathForKey(p.key, locale.value) })),
-)
 
 useSeo(() => ({
   title: home ? pick(home.title) : t('brand'),
@@ -41,25 +35,37 @@ useSeo(() => ({
       :logo-alt="t('brand')"
       :kicker="t('footer.madeIn')"
       :title="t('brand')"
-      :cta-label="t('nav.reservation')"
-      :cta-to="pathForKey('forma-kratisis-domatiou', locale) || '#'"
+      :cta-label="t('home.reserve')"
+      :cta-to="pathForKey('contact-us', locale) || '#'"
     />
 
     <DraftTranslationNotice v-if="locale === 'en' && home && !home.enReviewed" />
 
+    <HomeIntro
+      :intro="homeIntro.intro.map(pick)"
+      :story-title="pick(homeIntro.storyTitle)"
+      :story="homeIntro.story.map(pick)"
+      :closing="pick(homeIntro.closing)"
+      :links="homeIntro.links.map((l) => ({ to: pathForKey(l.key, locale) || '#', label: pick(l.label) }))"
+    />
+
     <!-- Designed image/text bands (rebuild of the live front page) -->
+    <template v-for="band in homeBands" :key="band.id">
+    <DotSeparator v-if="band.id === 'delicacies'" />
     <HomeBand
-      v-for="band in homeBands"
-      :key="band.id"
       :kicker="pick(band.kicker)"
       :title="pick(band.title)"
       :body="pick(band.body)"
       :image="band.image"
       :cta-label="pick(band.ctaLabel)"
       :cta-to="pathForKey(band.ctaKey, locale) || '#'"
+      :links="band.links?.map((l) => ({ to: pathForKey(l.key, locale) || '#', label: pick(l.label) }))"
+      :framed="band.framed"
+      :arch="band.arch"
       :reverse="band.reverse"
       :tint="band.tint"
     />
+    </template>
 
     <!-- Opening hours -->
     <section class="py-12 lg:py-20">
@@ -74,36 +80,6 @@ useSeo(() => ({
     </section>
 
     <!-- Awards -->
-    <section v-if="homeAwards.length" class="py-12 lg:py-20">
-      <div class="mx-auto max-w-7xl px-6 lg:px-10">
-        <SectionTitle :title="t('home.awards')" />
-        <div class="grid grid-cols-2 items-center gap-8 sm:grid-cols-4">
-          <div v-for="src in homeAwards" :key="src" class="flex h-32 items-center justify-center">
-            <img :src="src" alt="" class="max-h-full max-w-full object-contain" loading="lazy" />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Latest news -->
-    <section v-if="latestPosts.length" class="bg-cream py-12 lg:py-20">
-      <div class="mx-auto max-w-7xl px-6 lg:px-10">
-        <SectionTitle :kicker="t('brand')" :title="t('home.latestNews')" />
-        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          <RouterLink v-for="p in latestPosts" :key="p.key" :to="p.href || '#'" class="group block">
-            <div class="aspect-[4/3] overflow-hidden bg-white">
-              <img
-                v-if="p.image"
-                :src="p.image"
-                alt=""
-                class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-            </div>
-            <h3 class="mt-4 text-sm leading-snug normal-case tracking-normal">{{ p.title }}</h3>
-          </RouterLink>
-        </div>
-      </div>
-    </section>
+    <AwardsPanel v-if="homeAwards.length" :awards="homeAwards" />
   </div>
 </template>

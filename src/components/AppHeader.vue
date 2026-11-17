@@ -7,7 +7,6 @@ import { useUiStore } from '@/stores/ui'
 import { useLocale } from '@/composables/useLocale'
 import { pathForKey } from '@/composables/usePages'
 import { MENU, type NavItem } from '@/site/navigation'
-import BaseButton from './BaseButton.vue'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 
 const { t } = useI18n()
@@ -17,7 +16,7 @@ const { mobileNavOpen } = storeToRefs(ui)
 const { locale, pick } = useLocale()
 
 const homeHref = computed(() => pathForKey('home', locale.value) || '/')
-const reservationHref = computed(() => pathForKey('forma-kratisis-domatiou', locale.value) || '#')
+const reservationHref = computed(() => pathForKey('contact-us', locale.value) || '#')
 
 function href(item: NavItem): string | null {
   return item.key ? pathForKey(item.key, locale.value) ?? null : null
@@ -70,13 +69,13 @@ function toggleGroup(label: string) { openGroup.value = openGroup.value === labe
                 <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
-            <div class="nav-panel absolute left-1/2 top-full w-64 -translate-x-1/2 pt-5">
-              <ul class="rounded-md border border-ink/10 bg-white py-2 text-ink shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)]">
+            <div class="nav-panel absolute left-1/2 top-full w-64 pt-5">
+              <ul class="rounded-md border border-ink/10 bg-white py-2 text-center text-ink shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)]">
                 <li v-for="c in item.children" :key="pick(c.label)">
                   <RouterLink v-if="c.key" :to="href(c)!" class="droplink" active-class="text-brand">
                     {{ pick(c.label) }}
                   </RouterLink>
-                  <ul v-if="c.children" class="mb-1 border-l border-ink/10 pl-3 ml-5">
+                  <ul v-if="c.children" class="mb-1">
                     <li v-for="s in c.children" :key="pick(s.label)">
                       <RouterLink v-if="s.key" :to="href(s)!" class="droplink droplink-sub" active-class="text-brand">
                         {{ pick(s.label) }}
@@ -91,10 +90,6 @@ function toggleGroup(label: string) { openGroup.value = openGroup.value === labe
       </nav>
 
       <div class="flex items-center gap-4">
-        <LanguageSwitcher />
-        <span class="hidden sm:inline-block">
-          <BaseButton :to="reservationHref">{{ t('nav.reservation') }}</BaseButton>
-        </span>
         <button
           type="button"
           class="relative h-6 w-7 lg:hidden"
@@ -106,6 +101,7 @@ function toggleGroup(label: string) { openGroup.value = openGroup.value === labe
           <span class="absolute left-0 top-1/2 block h-0.5 w-7 -translate-y-1/2 bg-current transition-opacity" :class="mobileNavOpen ? 'opacity-0' : ''"></span>
           <span class="absolute left-0 block h-0.5 w-7 bg-current transition-all" :class="mobileNavOpen ? 'top-1/2 -translate-y-1/2 -rotate-45' : 'bottom-1'"></span>
         </button>
+        <LanguageSwitcher />
       </div>
     </div>
 
@@ -229,7 +225,7 @@ function toggleGroup(label: string) { openGroup.value = openGroup.value === labe
   background: var(--color-cream);
 }
 .droplink-sub {
-  padding: 0.45rem 0.75rem;
+  padding: 0.45rem 1.25rem;
   font-size: 0.68rem;
   color: color-mix(in srgb, var(--color-ink) 55%, transparent);
 }

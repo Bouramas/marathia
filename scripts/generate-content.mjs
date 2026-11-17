@@ -25,7 +25,7 @@ const usedMedia = new Set()
 function decodeEntities(s) {
   return String(s || '')
     .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"').replace(/&#0?39;|&#x27;|&rsquo;/g, "'")
+    .replace(/&nbsp;/g, ' ').replace(/ageing/g, 'aging').replace(/Ageing/g, 'Aging')
     .replace(/&nbsp;/g, ' ')
 }
 
@@ -59,6 +59,7 @@ function clean(raw) {
   s = s.replace(/<(p|h2|h3|h4|li|blockquote)\b[^>]*>(?:(?!<\/\1>)[\s\S])*?lorem ipsum(?:(?!<\/\1>)[\s\S])*?<\/\1>/gi, '')
   s = s.replace(/<p>\s*(?:&nbsp;)?\s*<\/p>/gi, '')
     .replace(/<span>\s*<\/span>/gi, '')
+  s = s.replace(/ageing/g, 'aging').replace(/Ageing/g, 'Aging')
     .replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/\s{2,}/g, ' ').trim()
   return s
 }

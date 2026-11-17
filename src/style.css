@@ -6,6 +6,7 @@
 @import '@fontsource/open-sans/700.css';
 @import '@fontsource/karla/400.css';
 @import '@fontsource/karla/500.css';
+@import '@fontsource/karla/600.css';
 
 /*
   Brand tokens carried over from the old Attika/Mikado WordPress theme.
@@ -35,6 +36,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    background-color: #fff; /* overscroll area below the footer blends with its white end */
   }
   body {
     @apply bg-page text-ink font-sans antialiased;
