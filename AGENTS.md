@@ -66,16 +66,11 @@ content source of truth when comparing. The local build should match it.
 | `npm run build` | **BUILD GATE**: `vue-tsc -b && vite build`. Must pass (zero TS errors). |
 | `npm run typecheck` | `vue-tsc` only |
 | `npm run preview` | Serve `dist/` (prints the port, usually 4173) |
-| `npm run extract` | = `node scripts/extract-content.mjs` |
 
-### Content pipeline (run in order after any content/mapping change)
-```
-node scripts/extract-content.mjs    # SQL dump -> scripts/out/{content,nav,attachments}.json
-node scripts/generate-content.mjs   # raw JSON -> src/content/*.ts + src/site/routes.json + scripts/out/used-media.json
-node scripts/copy-media.mjs         # referenced uploads + video/poster/pdfs -> public/assets/
-npm run build                       # gate
-```
-`scripts/out/` is git-ignored (regenerable). `src/content/*` IS committed.
+### Content (pipeline retired)
+The WordPress extract/generate/copy-media scripts were removed once the content was ported.
+`src/content/*`, `src/site/routes.json` and `public/assets/` are now the **source of truth** and
+may be edited directly. `backup/wp_content/uploads/` (git-ignored) is kept only as an image archive.
 
 ### Visual verification (headless Chrome is available on this machine)
 ```
@@ -91,61 +86,13 @@ live `marathiatinos.gr` (WebFetch the live page for its structure/copy).
 
 ---
 
-## 5. The content pipeline in detail (how mapping works — read before touching it)
+## 5. Content origin (historical)
 
-WordPress facts established from the dump (table prefix `wp_`):
-- **Front page** = `wp_options.page_on_front` → **ID 81** (`marathia-tinos`, title
-  "Αρχικη"), a ~38 KB WPBakery page. This is the HOMEPAGE, served at `/`
-  (content key `home`). It is NOT a generic page — don't miss it.
-- **Blog page** = `page_for_posts` → ID 1662 (handled by `BlogListView`, not ported
-  as content).
-- **Permalinks** = `/%postname%/`; pages are hierarchical via `post_parent`, so real
-  URLs are nested: `about/i-filosofia-mas`, `i-tinos/me-mia-matia`,
-  `souites-kai-domatia/diklina`. **Slugs must be the full hierarchical path.**
-- **WPML**: Greek (`el`) is source/default; English pages are **separate posts with
-  their own real slugs** (`about/our-philosophy`), linked to the Greek source via
-  `wp_icl_translations.trid`. There is **no `/en/` URL prefix** — the slug encodes
-  the language.
-- Content is **WPBakery + Mikado shortcodes** (no ACF, not Gutenberg).
-- Menus live in `wp_terms`/`wp_term_taxonomy` (`nav_menu`): primary = **`Kyrio menou`**
-  (+ `Kyrio menou - Αγγλικά`), footer = **`Footer menu`** (+ `- Αγγλικά`). Menu item
-  targets/order are in `nav_menu_item` posts + `_menu_item_*` postmeta.
-
-### `scripts/extract-content.mjs`
-Hand-rolled mysqldump parser (extended inserts, explicit column lists). Reads the
-file as **`latin1` then re-decodes to UTF-8** so Greek survives — do not "fix" this.
-Outputs to `scripts/out/`:
-- `content.json` — one entry per Greek source page/post/CPT, with its EN twin pulled
-  via `trid`, hierarchical `slug_el`/`slug_en`, titles, excerpts, featured image,
-  raw `content_el`/`content_en`.
-- `nav.json` — real `Kyrio menou` + `Footer menu` (el + en), hierarchical hrefs.
-- `attachments.json` — attachment ID → uploads-relative path.
-
-**Exclusions** (so only real content ships):
-- `EXCLUDE_SLUGS` — Attika UI-demo pages (accordions, buttons, columns, headings,
-  info-box, pie-chart, …) + WooCommerce (cart/checkout/shop/my-account) + stale demo
-  homes (seafood-restaurant).
-- `isPlaceholder()` — auto-drops unfinished pages whose body is Latin filler
-  (`lorem ipsum`/`etiam rhoncus`/`Main ChefMain Chef`/demo `kitchen-*` images) with
-  **< 200 Greek chars** (e.g. astrea-wine-bar, i-omada, chrisima-2 were all stubs).
-
-### `scripts/generate-content.mjs`
-Transforms `content.json` → typed modules under `src/content/`. `clean()` turns
-shortcode markup into **allow-listed HTML**: `mkdf_section_title text=` → `<h2>`,
-`(vc|mkdf)_single_image image=ID` → `<figure><img>` (resolved via attachments),
-strips all other shortcodes + `style`/`class` attrs, rewrites internal links/image
-URLs to local paths, and **drops leftover `Lorem ipsum` blocks**. Emits:
-`src/content/pages/*.ts`, `menu.ts`, `testimonials.ts`, `portfolio.ts`, `nav.ts`,
-`index.ts`, plus `src/site/routes.json` and `scripts/out/used-media.json`.
-
-### `scripts/copy-media.mjs`
-Copies only the uploads referenced by ported content (from `used-media.json`,
-currently ~139 files, not the full 525 MB) into `public/assets/uploads/`, plus:
-- `public/assets/video/hero.mp4` (home hero video — original `uploads/2018/08/Sequence-1.mp4`)
-- `public/assets/hero/poster.jpg`, `hero/dining.jpg`
-- `public/assets/logo.png`
-- `public/assets/pdf/menu-2024.pdf`, `programma-gastrotourismou-tinos.pdf` (PDF
-  names sanitized from mojibake).
+Content was originally extracted from the WordPress SQL dump (WPBakery + Mikado shortcodes,
+WPML `trid` for EN twins, hierarchical slugs, real `Kyrio menou`/`Footer menu` menus) and
+transformed into allow-listed HTML in typed modules. The scripts and dump are gone; see git
+history for `scripts/{extract-content,generate-content,copy-media}.mjs` if the logic is needed.
+Static media lives in `public/assets/` (`uploads/`, `video/hero.mp4`, `hero/`, `logo.png`, `pdf/`).
 
 ### Current content counts
 home ×1, ~23 pages, 12 posts, 9 menu dishes, 6 testimonials, 51 portfolio items;
@@ -248,13 +195,9 @@ as a safety against stray horizontal scroll.
 ## 10. Project layout
 
 ```
-backup/                 WP source (git-ignored): SQL dump + wp_content
+backup/                 git-ignored image archive: wp_content/uploads only
 scripts/
-  extract-content.mjs   SQL dump -> scripts/out/*.json
-  generate-content.mjs  raw JSON -> src/content/*.ts + routes.json
-  copy-media.mjs        referenced uploads + video/pdfs -> public/assets
   shot.mjs              headless-Chrome screenshot helper (CDP)
-  out/                  generated intermediates (git-ignored)
 public/
   assets/{uploads,video,hero,pdf}, logo.png
   robots.txt
@@ -264,8 +207,8 @@ src/
   i18n/index.ts
   stores/{ui,toast,subscriptionForm}.ts
   types/content.ts            the content model
-  content/                    AUTO-GENERATED — pages/*.ts, menu/testimonials/portfolio/nav/index
-  site/routes.json            AUTO-GENERATED canonical paths (both locales)
+  content/                    pages/*.ts, menu/testimonials/portfolio/nav/index
+  site/routes.json            canonical paths (both locales)
   components/ + components/forms/
   composables/{useLocale,useSeo,usePages}.ts
   site/about-pages.ts         hand-authored sections for History/Philosophy/Maturation views
@@ -273,20 +216,17 @@ src/
   site/tinos-pages.ts         hand-authored sections + entries for Tinos/Attractions/Beaches views (placeholder images in PH)
   views/*.vue                 Home, ContentPage, BlogList, Post, Menu, Reservation, Contact, History, Philosophy, Maturation, NotFound
 ```
-**Do not hand-edit `src/content/*` or `src/site/routes.json`** — change the generator
-or the extractor and re-run the pipeline. (Curate the *source* copy downstream only
-if you also keep the generator idempotent.)
+`src/content/*` and `src/site/routes.json` are now hand-maintained (generator removed).
 
 ---
 
 ## 11. Gotchas
 
-- SQL dump is UTF-8 stored as bytes; extractor reads `latin1` then re-decodes. Don't change.
 - `RichText` uses `v-html`, but only on **build-time, allow-listed** output from our
   own pipeline (not user input) — safe. Keep it that way; don't feed it raw shortcode.
 - Slugs are hierarchical — never flatten; it breaks URL/SEO parity with the live site.
 - No `/en` prefix — English pages have their own real slugs via WPML `trid`.
-- Re-run `copy-media.mjs` after `generate-content.mjs` whenever referenced media changes.
+- New media: copy it into `public/assets/` manually.
 - WooCommerce, auth/dashboard, RevSlider, Quform, js_composer are **intentionally
   gone** — don't reintroduce without a scope decision.
 
