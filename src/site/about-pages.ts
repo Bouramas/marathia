@@ -160,7 +160,7 @@ export interface Pillar {
 }
 
 export const philosophy = {
-  image: '/assets/uploads/2024/12/new-orthia-filosofia-831x1274-1.jpg',
+  image: '/assets/pictures/new-orthia-filosofia-831x1274-1.jpg',
   intro: L(
     'Πέντε βασικές έννοιες βρίσκονται στο επίκεντρο της φιλοσοφίας της Μαραθιάς, τις οποίες κάνουμε πράξη καθημερινά:',
     'There are five basic concepts at the heart of Marathia’s philosophy, and we put each of these into practice every day:',
@@ -187,7 +187,7 @@ export const philosophy = {
     'Αυτή είναι η ταυτότητά μας την οποία σεβόμαστε, υποστηρίζουμε και εξελίσσουμε, ενώ παράλληλα αναβιώνουμε γεύσεις του τόπου μας, της Τήνου, με δημιουργικές και φρέσκες ιδέες.',
     'This is the identity that we respect, support and develop, while also revitalising the traditional dishes of our island, Tinos, with creative and fresh ideas.',
   ),
-  identityImage: '/assets/uploads/2025/01/DSC3651-scaled.jpg',
+  identityImage: '/assets/pictures/tinos_food/DSC3651-scaled.jpg',
   recognition: L(
     'Η Μαραθιά είναι μέλος της Ευρωπαϊκής πρωτοβουλίας I stars, με στόχο τη μείωση του περιβαλλοντικού μας αποτυπώματος. Έχει διακριθεί και τιμηθεί με ειδικό βραβείο Top Notch από τον θεσμό των Χρυσών Σκούφων και βραβείο Ελληνικής Κουζίνας από τον Alpha Guide του Αθηνοράματος. Επίσης, με δύο αστέρια FNL Best Restaurant Awards.',
     'Marathia is a member of the European I stars initiative with the aim of reducing our environmental footprint. It has been honoured with a special Top Notch award from the Golden Hats institution and a Greek Cuisine award from Athinorama’s Alpha Guide. The restaurant has also received two stars from the FNL Best Restaurant Awards.',

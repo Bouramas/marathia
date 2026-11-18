@@ -205,6 +205,12 @@ server-side **301s** for any URL that changed. Not done yet.
 DotSeparator sits at the end. Copy lives in i18n `contact.*`.
 `ContactForm.vue` is now unused.
 
+**Booking page** (`/booking`, key `forma-kratisis-domatiou`, `ReservationView.vue` + `forms/ReservationForm.vue`)
+is a guesthouse booking *request* UI: custom range calendar `forms/DateRangePicker.vue` (no deps, el/en via
+`Intl`), guests steppers, room preference, details, consent, summary aside, thank-you panel. Copy in i18n
+`booking.*`. Still stubbed (`BookingPayload` → `submitForm`); the notice says the host will contact the guest
+to confirm and arrange payment.
+
 `src/stores/subscriptionForm.ts` → `submitForm(payload, endpoint?)`. With no
 `endpoint` it logs + simulates success (shows a success toast). `ReservationForm.vue`
 + `ContactForm.vue` have full fields + validation. **TODO:** pick a destination

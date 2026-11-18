@@ -16,6 +16,21 @@ export interface ReservationPayload {
   message?: string
 }
 
+export interface BookingPayload {
+  from: string
+  to: string
+  adults: number
+  children: number
+  room: string
+  name: string
+  email: string
+  phone: string
+  arrivalTime?: string
+  message?: string
+  interestedInExperiences?: boolean
+  consent: boolean
+}
+
 export interface ContactPayload {
   name: string
   email: string
@@ -25,10 +40,10 @@ export interface ContactPayload {
 
 export const useSubscriptionFormStore = defineStore('subscriptionForm', () => {
   const submitting = ref(false)
-  const lastSubmitted = ref<ReservationPayload | ContactPayload | null>(null)
+  const lastSubmitted = ref<ReservationPayload | ContactPayload | BookingPayload | null>(null)
 
   async function submitForm(
-    payload: ReservationPayload | ContactPayload,
+    payload: ReservationPayload | ContactPayload | BookingPayload,
     endpoint?: string,
   ): Promise<{ ok: boolean }> {
     submitting.value = true
