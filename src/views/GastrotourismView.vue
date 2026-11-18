@@ -16,6 +16,22 @@ const { t } = useI18n()
 const { locale, pick } = useLocale()
 const page = pageByKey(route.meta.pageKey as string)
 
+// Split a story paragraph around its inline links (see `story.links`).
+const storyParts = (text: string, para: number) => {
+  const parts: { text: string; to?: string }[] = []
+  let rest = text
+  for (const l of g.story.links.filter((x) => x.para === para)) {
+    const word = pick(l.word)
+    const at = rest.indexOf(word)
+    if (at < 0) continue
+    if (at > 0) parts.push({ text: rest.slice(0, at) })
+    parts.push({ text: word, to: pathForKey(l.key, locale.value) || '#' })
+    rest = rest.slice(at + word.length)
+  }
+  parts.push({ text: rest })
+  return parts
+}
+
 const num = (i: number) => String(i + 1).padStart(2, '0')
 
 useSeo(() => {
@@ -45,8 +61,14 @@ useSeo(() => {
           <span class="mt-6 block h-px w-14 bg-brand"></span>
           <p class="mt-6 max-w-xl text-base font-light leading-relaxed text-ink/85 lg:text-lg">{{ pick(g.lead) }}</p>
         </div>
-        <div class="mx-auto w-full max-w-[320px] overflow-hidden rounded-t-[999px] rounded-b-sm lg:max-w-[400px]">
-          <img :src="g.headerImage" alt="" loading="eager" class="aspect-[3/4] w-full object-cover" />
+        <div class="relative mx-auto w-full max-w-[320px] lg:max-w-[400px]">
+          <div
+            aria-hidden="true"
+            class="absolute -right-4 top-4 h-full w-full rounded-t-[999px] rounded-b-sm border border-brand/60 sm:-right-6 sm:top-6"
+          ></div>
+          <div class="relative overflow-hidden rounded-t-[999px] rounded-b-sm">
+            <img :src="g.headerImage" alt="" loading="eager" class="aspect-[3/4] w-full object-cover" />
+          </div>
         </div>
       </div>
     </header>
@@ -54,17 +76,26 @@ useSeo(() => {
     <!-- Story -->
     <section class="py-10 lg:py-16">
       <div class="mx-auto grid max-w-5xl items-center gap-8 px-6 lg:grid-cols-12 lg:gap-12 lg:px-10">
-        <div class="overflow-hidden rounded-3xl lg:col-span-5">
-          <img
-            :src="g.story.image"
-            alt=""
-            loading="lazy"
-            class="aspect-[4/3] w-full object-cover transition duration-700 hover:scale-105 lg:aspect-[3/4]"
-          />
+        <div class="relative lg:col-span-5">
+          <div
+            aria-hidden="true"
+            class="absolute -left-4 top-4 h-full w-full rounded-sm border border-brand/60 sm:-left-6 sm:top-6"
+          ></div>
+          <div class="relative overflow-hidden rounded-sm">
+            <img
+              :src="g.story.image"
+              alt=""
+              loading="lazy"
+              class="aspect-[4/3] w-full object-cover transition duration-700 hover:scale-105 lg:aspect-[3/4]"
+            />
+          </div>
         </div>
         <div class="lg:col-span-7">
           <p v-for="(para, i) in pick(g.story.paragraphs)" :key="i" class="mb-4 leading-relaxed text-ink/80">
-            {{ para }}
+            <template v-for="(part, j) in storyParts(para, i)" :key="j">
+              <RouterLink v-if="part.to" :to="part.to" class="text-brand underline underline-offset-2 hover:text-ink">{{ part.text }}</RouterLink>
+              <template v-else>{{ part.text }}</template>
+            </template>
           </p>
         </div>
       </div>
@@ -92,8 +123,14 @@ useSeo(() => {
         <SectionTitle :title="t('svc.activities')" />
         <p class="mx-auto mb-8 max-w-2xl text-center leading-relaxed text-ink/80">{{ pick(g.activitiesIntro) }}</p>
 
-        <div class="mb-8 overflow-hidden rounded-3xl">
-          <img :src="g.activitiesImage" alt="" loading="lazy" class="aspect-[16/7] w-full object-cover" />
+        <div class="relative mb-10">
+          <div
+            aria-hidden="true"
+            class="absolute -right-3 top-3 h-full w-full rounded-sm border border-brand/60 sm:-right-4 sm:top-4"
+          ></div>
+          <div class="relative overflow-hidden rounded-sm">
+            <img :src="g.activitiesImage" alt="" loading="lazy" class="aspect-[16/7] w-full object-cover" />
+          </div>
         </div>
 
         <div class="grid gap-4 md:grid-cols-2 lg:gap-5">

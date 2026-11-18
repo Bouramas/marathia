@@ -25,6 +25,14 @@ export interface HomeBand {
   reverse?: boolean
   /** Warm cream background band, for vertical rhythm. */
   tint?: boolean
+  /** Optional second text block shown under the first, sharing the band's image. */
+  extra?: {
+    kicker: Localized
+    title: Localized
+    body: Localized
+    ctaKey: string
+    ctaLabel: Localized
+  }
 }
 
 export const homeBands: HomeBand[] = [
@@ -101,23 +109,20 @@ export const homeBands: HomeBand[] = [
     framed: true,
     ctaKey: 'souites-kai-domatia',
     ctaLabel: { el: 'Διαβάστε περισσότερα', en: 'Read more' },
-  },
-  {
-    id: 'seaside',
-    kicker: { el: 'Ζωή δίπλα στη θάλασσα', en: 'Life by the sea' },
-    title: {
-      el: 'Στην παραλία του Αγίου Φωκά',
-      en: 'On Agios Fokas beach',
+    // Second text block sharing this band's image (formerly the separate "seaside" band).
+    extra: {
+      kicker: { el: 'Ζωή δίπλα στη θάλασσα', en: 'Life by the sea' },
+      title: {
+        el: 'Στην παραλία του Αγίου Φωκά',
+        en: 'On Agios Fokas beach',
+      },
+      body: {
+        el: 'Ξεκουραστείτε και αναζωογονηθείτε κάνοντας μπάνιο, περιπάτους και αθλητικές δραστηριότητες στη μεγάλη παραλία του Αγίου Φωκά, που εκτείνεται μέχρι τον αρχαιολογικό χώρο του Βρέκαστρου. Η πόλη της Τήνου απέχει μόλις 2,8 χιλιόμετρα.',
+        en: 'Relax and rejuvenate by swimming, walking and enjoying sports on the long Agios Fokas beach, which reaches the archaeological site of Vrekastro. Tinos town is just 2.8 km away.',
+      },
+      ctaKey: 'i-tinos/me-mia-matia',
+      ctaLabel: { el: 'Διαβάστε για την Τήνο', en: 'Discover Tinos' },
     },
-    body: {
-      el: 'Ξεκουραστείτε και αναζωογονηθείτε κάνοντας μπάνιο, περιπάτους και αθλητικές δραστηριότητες στη μεγάλη παραλία του Αγίου Φωκά, που εκτείνεται μέχρι τον αρχαιολογικό χώρο του Βρέκαστρου. Η πόλη της Τήνου απέχει μόλις 2,8 χιλιόμετρα.',
-      en: 'Relax and rejuvenate by swimming, walking and enjoying sports on the long Agios Fokas beach, which reaches the archaeological site of Vrekastro. Tinos town is just 2.8 km away.',
-    },
-    image: '/assets/uploads/2024/12/dipla-sto-opario.jpg',
-    ctaKey: 'i-tinos/me-mia-matia',
-    ctaLabel: { el: 'Διαβάστε για την Τήνο', en: 'Discover Tinos' },
-    reverse: true,
-    tint: true,
   },
 ]
 

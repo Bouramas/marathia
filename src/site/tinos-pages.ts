@@ -14,6 +14,7 @@ const PH = {
   village: '/assets/pictures/tinos/Pyrgos-Marmarotexnias-1.jpg',
   art: '/assets/pictures/tinos/Halepas-Idryma-Tin-Politismou-V-24.jpg',
   people: '/assets/pictures/tinos/PIOP-Evelyn-.jpg',
+  isternia: '/assets/pictures/tinos/isternia2-1536x1024.jpg',
   sea: '/assets/uploads/2025/01/pammostiniakos.jpg',
   table: '/assets/pictures/tinos_food/olives.jpg',
   hero: '/assets/hero/dining.jpg',
@@ -28,6 +29,8 @@ export interface TinosSection {
   title: Localized
   body: Localized
   image: string
+  /** Optional inline link: the first occurrence of `word` in the body links to page `key`. */
+  link?: { key: string; word: Localized }
 }
 
 export const tinos = {
@@ -55,6 +58,7 @@ export const tinos = {
         'You can walk or drive to some of the island’s 1000 famous stone dovecotes with their elaborate geometric designs. You’ll see whitewashed chapels dotted on the island’s steep slopes, along with old threshing floors and rustic stone shelters once used for livestock. And then there are the beaches with their turquoise waters and golden sparkling sands. Or, if you want to go for a longer walk, you can follow paths along the countless dry-stone walls that weave like ribbons across the hillsides, tying the land together. Tinos is best explored slowly, so walk as much as you can. This is the best way to truly experience the island’s folk history, following the old farm tracks that connected each village to its neighbors. Savor authentic island products, enjoy traditional local recipes and sip Tinos raki and the exquisite wines from the vineyards in Volax.',
       ),
       image: PH.landscape,
+      link: { key: 'i-tinos/paralies', word: L('Παραλίες', 'beaches') },
     },
     {
       id: 'people',
@@ -63,7 +67,7 @@ export const tinos = {
         'Και τέλος μιλήστε με τους φιλόξενους κατοίκους των χωριών που θα σας υποδεχθούν με τη φράση «καλώς τους». Συζητήστε με όλους εκείνους που ήρθαν να μείνουν και να δουλέψουν στην Τήνο τα τελευταία χρόνια και την αγαπάνε σαν πατρίδα τους. Καθώς και με όλους όσους ασχολούνται με τον πολιτισμό, αναδεικνύουν έμπρακτα την αυθεντική της ταυτότητα και προσπαθούν να την προστατέψουν από την επέλαση της κακώς εννοούμενης ανάπτυξης...',
         'Finally, talk to the friendly villagers who will welcome you with the phrase "kalostous", or “welcome”. Chat to all the people who have come to stay and work in Tinos in recent years and who have adopted it as their homeland. Take time to discuss things with those who are involved in the island’s culture, working to highlight its true identity and trying to protect it from the onslaught of ill-conceived development...',
       ),
-      image: PH.people,
+      image: PH.isternia,
     },
   ] as TinosSection[],
   links: [
@@ -114,7 +118,7 @@ export const attractions = {
             'Εμβλημα του νησιού, καθόρισε την εικόνα του για πολλά χρόνια. Ο σημερινός ναός της Ευαγγελίστριας άρχισε να κτίζεται μετά την εύρεση της εικόνας της Παναγίας, το 1823, πάνω από τον πρώτο ναό της Ζωοδόχου Πηγής. Η επίσημη τελετή εγκαινίων έγινε το 1825. Το προσκύνημα της Ευαγγελίστριας αποτελείται από το παρεκκλήσι, τον κυρίως ναό, που είναι γεμάτος αφιερώματα και τάματα- και τον ναό της Ευρέσεως με το αγιασμένο νερό. Εκεί υπάρχουν 3 βαπτιστήρια και πλάι του το μικρό μαυσωλείο της Έλλης. Στο προαύλιο του συγκροτήματος της Ευαγγελίστριας υψώνεται η Φιάλη (σιντριβάνι), όπου στα Θεοφάνια γίνεται ο αγιασμός.',
             'An emblem of Tinos, the Church of Evangelistria has shaped the island’s identity for centuries. After the miraculous appearance of an icon of the Virgin Mary above the original Zoodochos Pigi church, work began on today’s Holy Church of the Virgin Mary Evangelistia in 1823. It was officially inaugurated just two years later, in 1825, becoming one of the most famous pilgrimage sites in Greece. The church complex includes the chapel, the main church—adorned with countless offerings — and the Church of the Zoodochos Pigi and the Discovery. There are three baptisteries which have served generations of pilgrims, and the small mausoleum to those who lost their lives in WWII when the Greek warship The Elli was torpedoed off Tinos. At the heart of the courtyard, is the Phiali (fountain) where the Epiphany blessing is given. More than a landmark, Evangelistria is the spiritual soul of Tinos, drawing pilgrims from all over Greece.',
           ),
-          image: PH.village,
+          image: '/assets/pictures/tinos/tinos_church.jpg',
         },
         {
           id: 'town',
@@ -123,7 +127,7 @@ export const attractions = {
             'Οι περισσότεροι παλιά την γνώριζαν μόνο χάρη στην Ευαγγελίστρια. Πλέον αντικατοπτρίζει την εξέλιξη του νησιού τα τελευταία χρόνια και συγκεντρώνει πολλά και καλαίσθητα μαγαζιά, μοντέρνα καφέ με άποψη, εξαιρετικά εστιατόρια κ.α. Η πιο γραφική πλευρά της πόλης κρύβεται στα σοκάκια πίσω από την περιοχή της Παλλάδας, απ’ όπου ξεκινάει πεζόδρομος με ωραία παλιά σπίτια που καταλήγει στο πλάι της Ευαγγελίστριας, καθώς και σε άλλα σημεία, όπως η γειτονιές της Μαλαματένιας, του Αη Νικόλα του καθολικού, το λαγκάδι των Τριών Ιεραρχών. Στον περίπατό σας επισκεφτείτε το αρχαιολογικό μουσείο, καθώς και το εξαιρετικό και πολύ δραστήριο Ίδρυμα Τηνιακού Πολιτισμού, στην παραλία, που φιλοξενεί περιοδικές εκθέσεις και τη μόνιμη έκθεση έργων του Γιαννούλη Χαλεπά.',
             'In the past, the only thing most people knew about the town was Evangelistria Church. However, Tinos Town is now a vibrant hub that reflects the island’s renaissance. Today, it blends Cycladic charm with cosmopolitan flair, offering stylish boutiques, modern, stylish cafés with exceptional restaurants etc. The most picturesque part of the town is hidden in the alleys behind the Pallada area. From here, a pedestrian street lined with beautiful old houses leads to the side of the Evangelistria. Those who explore further will come across other “hidden gems” such as the neighborhoods of Malamatenia, Ai Nikolas tou Katholikon and Trion Iarchon. A visit to the Archaeological Museum offers a glimpse into Tinos’ past, while the Cultural Foundation of Tinos, located on the waterfront, is a must-see for art lovers. This is a very active centre which hosts temporary exhibitions and a permanent exhibition of the work of Yannoulis Chalepas, one of Greece’s most renowned sculptors.',
           ),
-          image: PH.sea,
+          image: '/assets/pictures/tinos/tinos_town.jpg',
         },
       ],
     },
@@ -138,7 +142,7 @@ export const attractions = {
             'Στα 540 μέτρα πάνω από τη θάλασσα, σ’ αυτά τα απόκρημνα και φυσικά οχυρά βράχια, βρισκόταν άλλοτε το ισχυρότερο κάστρο του Αιγαίου και στην περιοχή ήταν η πρωτεύουσα του νησιού σε αρκετές ιστορικές περιόδους. Στη ρίζα του βράχου βρίσκονται τα ορθόδοξα ξωκλήσια του Αγίου Μηνά και της Ελεούσας, καθώς και το μεγάλο καθολικό προσκύνημα της Ιεράς Καρδίας του Ιησού, το οποίο ιδρύθηκε από Ιησουίτες μοναχούς και ανακαινίστηκε το 1893.',
             'At 540 meters above sea level, these steep and naturally fortified rocks, were once the site of the strongest castle in the Aegean. The area was also the capital of the island during several historical periods. At the base of the rock, two Orthodox chapels—Agios Minas and Agia Eleousa—offer a moment of reflection. Nearby, you can see the impressive Catholic pilgrimage site of the Sacred Heart of Jesus which was founded by Jesuit monks and rebuilt in 1893.',
           ),
-          image: PH.landscape,
+          image: '/assets/pictures/tinos/exombourgo.jpg',
         },
         {
           id: 'dovecotes',
@@ -147,7 +151,7 @@ export const attractions = {
             'Στολίδια ανάμεσα στις ξερολιθιές και τα ρέματα, αριστουργήματα των λαϊκών τεχνιτών με τα περίτεχνα λιθοκεντήματά τους, οι περιστεριώνες χαρακτηρίζουν την Τήνο. Σύμφωνα με τους ερευνητές φτάνουν τους 1000 σε όλο το νησί.',
             'Tinos is famous for its beautifully decorative dovecots which are scattered among the island’s dry stone walls and streams. They are masterpieces of folk craftsmanship with their elaborate geometric patterns, and have come to characterize Tinos. According to researchers, there are up to 1000 of them on the island.',
           ),
-          image: PH.village,
+          image: '/assets/pictures/tinos/peristeronas_b.jpg',
         },
         {
           id: 'villages',
@@ -238,7 +242,7 @@ export const beaches = {
     'Παραλίες με γαλαζοπράσινα νερά και άμμο που χρυσίζει και αστράφτει.',
     'Beaches with turquoise waters and golden sparkling sands.',
   ),
-  image: PH.sea,
+  image: '/assets/pictures/tinos/agios_romanos_beach.jpg',
   items: [
     {
       id: 'agios-petros',
@@ -247,7 +251,6 @@ export const beaches = {
         'Μεγάλη παραλία την οποία χωρίζει στα δύο ένας βράχος που μπαίνει στη θάλασσα. Πάνω του βρίσκεται το εκκλησάκι του Αγίου Πέτρου (16ος αι.).',
         'A large beach divided in two by a rocky outcrop that juts out into the sea. The 16th century chapel of Agios Petros perches on top of the rocks.',
       ),
-      image: PH.sea,
     },
     {
       id: 'agios-romanos',
@@ -256,6 +259,7 @@ export const beaches = {
         'Μεγάλη, αμμώδης, με beach bar και υπέροχα νερά.',
         'Large, sandy beach with a beach bar and beautiful sea.',
       ),
+      image: '/assets/pictures/tinos/agios_romanos_beach.jpg',
       tags: [T.sandy, T.bar],
     },
     {
@@ -301,7 +305,6 @@ export const beaches = {
         'Η πιο άγρια και εντυπωσιακή παραλία της Τήνου κοντά στην οποία βρίσκεται και ο περίφημος φάρος. Έχει άμμο, βότσαλα και τεράστιους γρανίτες με υπέροχα σχήματα.',
         'The wildest and most impressive beach in Tinos, with sand, pebbles and huge, stangely-shaped granite rocks. It is close to a famous lighthouse which was built in 1910 but is now abandoned.',
       ),
-      image: PH.landscape,
       tags: [T.wild, T.sandy, T.pebbles],
     },
     {
@@ -320,6 +323,7 @@ export const beaches = {
         'Βρίσκεται στα βόρεια του νησιού. Είναι ιδανική για σερφ, εξ ου και υπάρχει σχολή και ωραίο beach bar.',
         'This beach is in the north of the island. It is ideal for surfing, with a surf school and a nice beach bar.',
       ),
+      image: '/assets/pictures/tinos/kolimpithra_beach.jpg',
       tags: [T.surf, T.bar],
     },
     {
@@ -347,7 +351,7 @@ export const beaches = {
         'Μια καταπληκτική αμμουδιά με αμμολόφο και πράσινα νερά, κρυμμένη σ’ έναν κολπίσκο πίσω από τον Αϊ-Γιάννη Πόρτο. Υπέροχα τα γλυπτά της βράχια.',
         'This amazing sandy beach with fascinating rock sculptures to explore, a sand dune and beautiful turquoise waters is tucked away in a cove behind Ai-Ioannis Porto.',
       ),
-      image: PH.landscape,
+      image: '/assets/pictures/tinos/pachia_ammos.jpg',
       tags: [T.sandy, T.wild],
     },
     {

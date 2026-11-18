@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 import { pageByKey, pathForKey } from '@/composables/usePages'
 import { useLocale } from '@/composables/useLocale'
 import { useSeo } from '@/composables/useSeo'
-import { tinos } from '@/site/tinos-pages'
+import { tinos, type TinosSection } from '@/site/tinos-pages'
 import { tinosPath, tinosViewBox } from '@/site/tinos-shape'
 import DotSeparator from '@/components/DotSeparator.vue'
 import BaseButton from '@/components/BaseButton.vue'
@@ -15,6 +15,16 @@ const route = useRoute()
 const { t } = useI18n()
 const { locale, pick } = useLocale()
 const page = pageByKey(route.meta.pageKey as string)
+
+// Split a section body around its optional inline-link word.
+const bodyParts = (s: TinosSection) => {
+  const text = pick(s.body)
+  if (!s.link) return null
+  const word = pick(s.link.word)
+  const at = text.indexOf(word)
+  if (at < 0) return null
+  return { before: text.slice(0, at), word, after: text.slice(at + word.length), to: pathForKey(s.link.key, locale.value) || '#' }
+}
 
 const num = (i: number) => String(i + 1).padStart(2, '0')
 
@@ -46,10 +56,19 @@ useSeo(() => {
             {{ pick(tinos.lead) }}
           </p>
         </div>
-        <svg :viewBox="tinosViewBox" class="mx-auto w-full max-w-[560px] lg:mx-0 lg:ml-[calc(100%-640px)] lg:w-[640px] lg:max-w-none" aria-hidden="true">
+        <svg :viewBox="tinosViewBox" class="mx-auto w-full max-w-[560px] overflow-visible lg:mx-0 lg:ml-[calc(100%-640px)] lg:w-[640px] lg:max-w-none" aria-hidden="true">
           <defs>
             <clipPath id="tinos-shape"><path :d="tinosPath" /></clipPath>
           </defs>
+          <path
+            :d="tinosPath"
+            transform="translate(-12 12)"
+            fill="none"
+            stroke="var(--color-brand)"
+            stroke-opacity="0.6"
+            stroke-width="1"
+            vector-effect="non-scaling-stroke"
+          />
           <image
             :href="tinos.image"
             x="120"
@@ -69,15 +88,25 @@ useSeo(() => {
           <span class="display text-5xl font-light leading-none text-brand">{{ num(i) }}</span>
           <h2 class="display mt-4 text-2xl tracking-[0.08em] sm:text-3xl md:tracking-[0.15em]">{{ pick(s.title) }}</h2>
           <span class="my-6 block h-px w-14 bg-brand"></span>
-          <p class="leading-relaxed text-ink/80">{{ pick(s.body) }}</p>
+          <p v-if="bodyParts(s)" class="leading-relaxed text-ink/80">
+            {{ bodyParts(s)!.before }}<RouterLink :to="bodyParts(s)!.to" class="text-brand underline underline-offset-2 hover:text-ink">{{ bodyParts(s)!.word }}</RouterLink>{{ bodyParts(s)!.after }}
+          </p>
+          <p v-else class="leading-relaxed text-ink/80">{{ pick(s.body) }}</p>
         </div>
-        <figure class="overflow-hidden rounded-sm" :class="i % 2 === 1 ? 'lg:order-1' : ''">
-          <img
-            :src="s.image"
-            alt=""
-            loading="lazy"
-            class="aspect-[4/3] w-full object-cover transition duration-700 hover:scale-105"
-          />
+        <figure class="relative mx-auto w-full max-w-[560px] lg:max-w-none" :class="i % 2 === 1 ? 'lg:order-1' : ''">
+          <div
+            aria-hidden="true"
+            class="absolute top-4 h-full w-full rounded-sm border border-brand/60 sm:top-6"
+            :class="i % 2 === 1 ? '-right-4 sm:-right-6' : '-left-4 sm:-left-6'"
+          ></div>
+          <div class="relative overflow-hidden rounded-sm">
+            <img
+              :src="s.image"
+              alt=""
+              loading="lazy"
+              class="aspect-[4/3] w-full object-cover transition duration-700 hover:scale-105"
+            />
+          </div>
         </figure>
       </div>
     </section>

@@ -62,6 +62,13 @@ useSeo(() => ({
       :arch="band.arch"
       :reverse="band.reverse"
       :tint="band.tint"
+      :extra="band.extra && {
+        kicker: pick(band.extra.kicker),
+        title: pick(band.extra.title),
+        body: pick(band.extra.body),
+        ctaLabel: pick(band.extra.ctaLabel),
+        ctaTo: pathForKey(band.extra.ctaKey, locale) || '#',
+      }"
     />
     </template>
 

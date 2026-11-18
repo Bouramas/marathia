@@ -17,6 +17,7 @@ withDefaults(
     links?: { to: string; label: string }[]
     framed?: boolean
     arch?: boolean
+    extra?: { kicker: string; title: string; body: string; ctaLabel: string; ctaTo: string }
   }>(),
   { reverse: false, tint: false },
 )
@@ -69,6 +70,14 @@ withDefaults(
           </ul>
           <div v-else-if="ctaLabel && ctaTo" class="mt-8">
             <BaseButton :to="ctaTo" variant="outline">{{ ctaLabel }}</BaseButton>
+          </div>
+          <div v-if="extra" class="mt-12 border-t border-ink/15 pt-12">
+            <p class="label-kicker text-brand mb-3">{{ extra.kicker }}</p>
+            <h2 class="mb-5 text-2xl font-semibold leading-snug text-ink sm:text-3xl">{{ extra.title }}</h2>
+            <p class="leading-relaxed text-ink/80">{{ extra.body }}</p>
+            <div class="mt-8">
+              <BaseButton :to="extra.ctaTo" variant="outline">{{ extra.ctaLabel }}</BaseButton>
+            </div>
           </div>
         </div>
       </div>

@@ -82,6 +82,11 @@ export const gastrotourism = {
         'But how well do you think you know Tinos? What would you say if you were given the opportunity to discover dozens more of its hidden charms, through experiences, guided tours, trips, excursions and activities that mean you are no longer a tourist, but rather you enjoy the interesting role of a traveller?',
       ],
     ),
+    /** Inline links: first occurrence of `word` inside paragraph `para` links to page `key`. */
+    links: [
+      { para: 0, key: 'i-tinos/paralies', word: L('παραλίες', 'beaches') },
+      { para: 1, key: 'i-tinos/me-mia-matia', word: L('Τήνο', 'Tinos') },
+    ] as { para: number; key: string; word: Localized }[],
   },
   mission: {
     quote: L(

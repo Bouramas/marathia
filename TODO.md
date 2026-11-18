@@ -35,10 +35,10 @@ contact
 There are some /blog pages - find them and relocate them to substack. Maybe add a more obvious link somewhere.
 
 
-TODO
-In tinos page add links to beaches and attractions
+Generate a privacy policy and add a subtle link in the footer under the social media links.
 
 
-Generate a privacy policy and add a link in the footer.
-
-Main Page - Change image at section `Στην παραλία του Αγίου Φωκά`
+FIX MOBILE VIEW
+CLEANUP
+Check the backup folder
+Check the scripts folder and delete whatever is not required.
