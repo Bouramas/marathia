@@ -14,7 +14,7 @@ const props = withDefaults(
 )
 
 const classes = computed(() => [
-  'inline-flex items-center justify-center px-7 py-3 label-kicker transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
+  'inline-flex items-center justify-center px-7 py-3 label-kicker cursor-pointer transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
   'hero-btn border-2 border-brand bg-transparent font-semibold',
   props.variant === 'hero' ? 'text-white' : 'text-black',
 ])

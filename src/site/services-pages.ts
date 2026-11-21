@@ -198,7 +198,6 @@ export const gastrotourism = {
   contact: {
     details: L('psourani@gmail.com / 697 4339652', 'psourani@gmail.com / +30 6974339652'),
     email: 'info@marathiatinos.gr',
-    pdf: '/assets/pdf/programma-gastrotourismou-tinos.pdf',
   },
 }
 

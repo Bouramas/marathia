@@ -1,13 +1,15 @@
 <script setup lang="ts">
-// Check-in / check-out range calendar. UI only; no availability data.
+// Check-in / check-out range calendar. `booked` = set of booked nights (YYYY-MM-DD);
+// a booked day is not a valid check-in, but is a valid check-out if the night before is free.
 // Model values are ISO dates (YYYY-MM-DD). Two months side by side from `md`.
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLocale } from '@/composables/useLocale'
+import { minNights } from '@/site/stay-rules'
 
 const from = defineModel<string>('from', { default: '' })
 const to = defineModel<string>('to', { default: '' })
-defineProps<{ error?: string }>()
+const props = defineProps<{ error?: string; booked?: Set<string>; loading?: boolean }>()
 
 const { t } = useI18n()
 const { locale } = useLocale()
@@ -61,8 +63,36 @@ function shift(delta: number) {
   view.value = new Date(view.value.getFullYear(), view.value.getMonth() + delta, 1)
 }
 
+const isBooked = (date: string) => !!props.booked?.has(date)
+
+// True when every night in [a, b) is free.
+function rangeFree(a: string, b: string) {
+  if (!props.booked?.size) return true
+  for (let d = parse(a); iso(d) < b; d.setDate(d.getDate() + 1)) if (isBooked(iso(d))) return false
+  return true
+}
+
+const choosingEnd = computed(() => !!from.value && !to.value)
+
+const addDays = (date: string, n: number) => {
+  const d = parse(date)
+  d.setDate(d.getDate() + n)
+  return iso(d)
+}
+
+// Earliest valid check-out for the chosen check-in (seasonal minimum stay).
+const earliestEnd = computed(() => (from.value ? addDays(from.value, minNights(from.value)) : ''))
+
+// Can this day be clicked in the current state?
+function selectable(date: string) {
+  if (date < today) return false
+  if (choosingEnd.value && date > from.value) return date >= earliestEnd.value && rangeFree(from.value, date)
+  // Check-in: must allow at least the minimum stay without hitting a booked night.
+  return !isBooked(date) && rangeFree(date, addDays(date, minNights(date)))
+}
+
 function pick(date: string) {
-  if (date < today) return
+  if (!selectable(date)) return
   if (!from.value || (from.value && to.value) || date <= from.value) {
     from.value = date
     to.value = ''
@@ -91,6 +121,9 @@ function state(date: string) {
 function cellClass(date: string) {
   const s = state(date)
   if (date < today) return 'cursor-not-allowed text-ink/25 line-through decoration-ink/15'
+  if (s !== 'start' && s !== 'end' && !selectable(date)) {
+    return isBooked(date) ? 'cursor-not-allowed bg-ink/5 text-ink/30 line-through decoration-ink/20' : 'cursor-not-allowed text-ink/25'
+  }
   if (s === 'start' || s === 'end') return 'bg-brand text-white font-semibold'
   if (s === 'between') return 'bg-brand/15 text-ink'
   return 'text-ink hover:bg-brand/10'
@@ -105,6 +138,14 @@ function rowClass(date: string) {
   if (s === 'between') return 'bg-brand/15'
   return ''
 }
+
+const minHint = computed(() => {
+  if (!choosingEnd.value) return ''
+  const n = minNights(from.value)
+  return n === 1
+    ? t('booking.minStayHintOne')
+    : t('booking.minStayHint', { n, date: tileFmt.value.format(parse(earliestEnd.value)) })
+})
 
 const nights = computed(() =>
   from.value && to.value ? Math.round((parse(to.value).getTime() - parse(from.value).getTime()) / 86400000) : 0,
@@ -178,7 +219,7 @@ const toLabel = computed(() => (to.value ? tileFmt.value.format(parse(to.value))
                   type="button"
                   class="mx-auto flex h-10 w-10 items-center justify-center rounded-full text-sm transition-colors"
                   :class="[cellClass(c.date), c.date === today && state(c.date) === '' ? 'ring-1 ring-brand/60' : '']"
-                  :disabled="c.date < today"
+                  :disabled="!selectable(c.date)"
                   :aria-label="dayFmt.format(parse(c.date))"
                   :aria-pressed="state(c.date) === 'start' || state(c.date) === 'end'"
                   @click="pick(c.date)"
@@ -192,6 +233,19 @@ const toLabel = computed(() => (to.value ? tileFmt.value.format(parse(to.value))
           </div>
         </div>
       </div>
+
+      <p v-if="minHint" class="mt-4 text-center text-sm font-semibold text-ink" aria-live="polite">{{ minHint }}</p>
+
+      <div class="mt-4 border-l-2 border-brand bg-cream/60 p-3 text-xs leading-relaxed text-ink/75">
+        <p class="label-kicker mb-1 text-[0.7rem] text-brand">{{ t('booking.minStayTitle') }}</p>
+        <p>{{ t('booking.minStayJuneSep') }}</p>
+        <p>{{ t('booking.minStayJulyAug') }}</p>
+      </div>
+
+      <p v-if="booked?.size" class="mt-4 flex items-center justify-center gap-2 text-xs text-ink/60">
+        <span class="inline-block h-3 w-3 rounded-full bg-ink/10" aria-hidden="true"></span>
+        {{ t('booking.legendBooked') }}
+      </p>
 
       <p v-if="nights" class="mt-5 border-t border-ink/10 pt-4 text-center text-sm text-ink/70">
         {{ nights === 1 ? t('booking.nightOne', { n: nights }) : t('booking.nightMany', { n: nights }) }}

@@ -15,9 +15,6 @@ const PH = {
   art: '/assets/pictures/tinos/Halepas-Idryma-Tin-Politismou-V-24.jpg',
   people: '/assets/pictures/tinos/PIOP-Evelyn-.jpg',
   isternia: '/assets/pictures/tinos/isternia2-1536x1024.jpg',
-  sea: '/assets/uploads/2025/01/pammostiniakos.jpg',
-  table: '/assets/pictures/tinos_food/olives.jpg',
-  hero: '/assets/hero/dining.jpg',
 }
 
 /* ------------------------------------------------------------------ */

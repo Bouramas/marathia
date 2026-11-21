@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Guesthouse booking REQUEST form. UI only: submit goes through the stubbed
 // subscriptionForm store (no backend). The host confirms and arranges payment.
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, toRef, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSubscriptionFormStore, type BookingPayload } from '@/stores/subscriptionForm'
 import { useToastStore } from '@/stores/toast'
@@ -10,25 +10,21 @@ import { pathForKey } from '@/composables/usePages'
 import BaseInput from './BaseInput.vue'
 import BaseButton from '../BaseButton.vue'
 import DateRangePicker from './DateRangePicker.vue'
+import { useAvailability } from '@/composables/useAvailability'
+import { minNights } from '@/site/stay-rules'
+import { ROOM_CATEGORIES, type CategoryId } from '@/site/rooms'
 
 const { t } = useI18n()
 const { locale } = useLocale()
 const store = useSubscriptionFormStore()
 const toast = useToastStore()
 
-const rooms = [
-  { id: 'any', label: 'booking.roomAny', desc: 'booking.roomAnyDesc', key: '' },
-  { id: 'standard', label: 'booking.roomStandard', desc: '', key: 'souites-kai-domatia/diklina' },
-  { id: 'superior', label: 'booking.roomSuperior', desc: '', key: 'souites-kai-domatia/superior-diklina-orofou' },
-  { id: 'junior', label: 'booking.roomJunior', desc: '', key: 'souites-kai-domatia/junior-suites' },
-]
-
 const blank = (): BookingPayload => ({
   from: '',
   to: '',
   adults: 2,
   children: 0,
-  room: 'any',
+  room: '',
   name: '',
   email: '',
   phone: '',
@@ -39,6 +35,13 @@ const blank = (): BookingPayload => ({
 })
 
 const form = reactive<BookingPayload>(blank())
+const { booked, loading, error: availabilityError } = useAvailability(toRef(form, 'room') as Ref<CategoryId | ''>)
+const hasRoom = computed(() => !!form.room)
+// Dates depend on the room's calendars, so a different room invalidates the chosen range.
+watch(() => form.room, () => {
+  form.from = ''
+  form.to = ''
+})
 const errors = reactive<Record<string, string>>({})
 const submitting = ref(false)
 const sent = ref<BookingPayload | null>(null)
@@ -55,7 +58,10 @@ const dateFmt = computed(
   () => new Intl.DateTimeFormat(locale.value === 'el' ? 'el-GR' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
 )
 const fmt = (s: string) => dateFmt.value.format(new Date(s))
-const roomLabel = computed(() => t(rooms.find((r) => r.id === form.room)?.label ?? 'booking.roomAny'))
+const roomLabel = computed(() => {
+  const r = ROOM_CATEGORIES.find((c) => c.id === form.room)
+  return r ? t(r.labelKey) : '—'
+})
 
 function step(field: 'adults' | 'children', delta: number) {
   const min = field === 'adults' ? 1 : 0
@@ -63,7 +69,13 @@ function step(field: 'adults' | 'children', delta: number) {
 }
 
 function validate(): boolean {
-  errors.dates = form.from && form.to ? '' : t('booking.errDates')
+  errors.room = form.room ? '' : t('booking.errRoom')
+  const min = form.from ? minNights(form.from) : 1
+  errors.dates = !(form.from && form.to)
+    ? t('booking.errDates')
+    : nights.value < min
+      ? t('booking.errMinStay', { n: min })
+      : ''
   errors.name = form.name.trim() ? '' : t('booking.errName')
   errors.email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email) ? '' : t('booking.errEmail')
   errors.phone = form.phone.trim().length >= 6 ? '' : t('booking.errPhone')
@@ -116,12 +128,50 @@ const inputBox =
     </div>
 
     <form v-else class="grid gap-12" novalidate @submit.prevent="onSubmit">
-      <!-- 01 Stay -->
+      <!-- 01 Room -->
       <section>
         <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
-          <span>01</span><span class="text-ink">{{ t('booking.stepStay') }}</span>
+          <span>01</span><span class="text-ink">{{ t('booking.stepRoom') }}</span>
         </p>
-        <DateRangePicker v-model:from="form.from" v-model:to="form.to" :error="errors.dates" />
+        <fieldset>
+          <legend class="sr-only">{{ t('booking.room') }}</legend>
+          <div class="grid gap-3 sm:grid-cols-3">
+            <label
+              v-for="r in ROOM_CATEGORIES"
+              :key="r.id"
+              class="flex cursor-pointer items-start gap-3 border bg-white px-4 py-3 transition-colors hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand/5"
+              :class="form.room === r.id ? 'border-brand' : 'border-ink/20'"
+            >
+              <input v-model="form.room" type="radio" name="room" :value="r.id" class="mt-1 cursor-pointer accent-[#c9a15b]" />
+              <span class="flex-1">
+                <span class="block text-sm font-semibold">{{ t(r.labelKey) }}</span>
+                <RouterLink
+                  v-if="pathForKey(r.pageKey, locale)"
+                  :to="pathForKey(r.pageKey, locale)!"
+                  target="_blank"
+                  class="text-xs text-brand underline-offset-2 hover:underline"
+                  @click.stop
+                >{{ t('booking.viewRoom') }} &rarr;</RouterLink>
+              </span>
+            </label>
+          </div>
+        </fieldset>
+        <p v-if="errors.room" class="mt-2 text-xs text-red-600" role="alert">{{ errors.room }}</p>
+      </section>
+
+      <!-- 02 Stay -->
+      <section>
+        <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
+          <span>02</span><span class="text-ink">{{ t('booking.stepStay') }}</span>
+        </p>
+        <p v-if="!hasRoom" class="mb-4 text-sm text-ink/60">{{ t('booking.selectRoomFirst') }}</p>
+        <div :class="hasRoom ? '' : 'pointer-events-none select-none opacity-40'" :inert="!hasRoom" :aria-busy="loading">
+          <DateRangePicker v-model:from="form.from" v-model:to="form.to" :booked="booked" :loading="loading" :error="errors.dates" />
+          <p v-if="loading" class="mt-2 text-xs text-ink/60" aria-live="polite">{{ t('booking.loadingAvailability') }}</p>
+          <div v-else-if="availabilityError" class="mt-4 border-l-2 border-red-600 bg-red-50 p-4 sm:p-5" role="alert">
+            <p class="label-kicker mb-1 text-xs text-red-700">{{ t('booking.availabilityErrorTitle') }}</p>
+            <p class="text-sm leading-relaxed text-red-900/80">{{ t('booking.availabilityError') }}</p>
+          </div>
 
         <div class="mt-8 grid gap-5 sm:grid-cols-2">
           <div v-for="g in [
@@ -135,7 +185,7 @@ const inputBox =
             <div class="flex items-center gap-3">
               <button
                 type="button"
-                class="flex h-8 w-8 items-center justify-center rounded-full border border-brand text-brand transition-colors hover:bg-brand hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-brand"
+                class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-brand text-brand transition-colors hover:bg-brand hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-brand"
                 :aria-label="`${t('booking.decrease')}: ${g.label}`"
                 :disabled="form[g.f] <= (g.f === 'adults' ? 1 : 0)"
                 @click="step(g.f, -1)"
@@ -143,7 +193,7 @@ const inputBox =
               <span class="w-5 text-center font-semibold" aria-live="polite">{{ form[g.f] }}</span>
               <button
                 type="button"
-                class="flex h-8 w-8 items-center justify-center rounded-full border border-brand text-brand transition-colors hover:bg-brand hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-brand"
+                class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-brand text-brand transition-colors hover:bg-brand hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-brand"
                 :aria-label="`${t('booking.increase')}: ${g.label}`"
                 :disabled="form[g.f] >= 10"
                 @click="step(g.f, 1)"
@@ -151,37 +201,13 @@ const inputBox =
             </div>
           </div>
         </div>
-
-        <fieldset class="mt-8">
-          <legend class="label-kicker mb-3 text-xs text-ink/70">{{ t('booking.room') }}</legend>
-          <div class="grid gap-3 sm:grid-cols-2">
-            <label
-              v-for="r in rooms"
-              :key="r.id"
-              class="flex cursor-pointer items-start gap-3 border bg-white px-4 py-3 transition-colors hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand/5"
-              :class="form.room === r.id ? 'border-brand' : 'border-ink/20'"
-            >
-              <input v-model="form.room" type="radio" name="room" :value="r.id" class="mt-1 accent-[#c9a15b]" />
-              <span class="flex-1">
-                <span class="block text-sm font-semibold">{{ t(r.label) }}</span>
-                <span v-if="r.desc" class="block text-xs text-ink/60">{{ t(r.desc) }}</span>
-                <RouterLink
-                  v-else-if="r.key && pathForKey(r.key, locale)"
-                  :to="pathForKey(r.key, locale)!"
-                  target="_blank"
-                  class="text-xs text-brand underline-offset-2 hover:underline"
-                  @click.stop
-                >{{ t('booking.viewRoom') }} &rarr;</RouterLink>
-              </span>
-            </label>
-          </div>
-        </fieldset>
+        </div>
       </section>
 
       <!-- 02 Details -->
       <section>
         <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
-          <span>02</span><span class="text-ink">{{ t('booking.stepDetails') }}</span>
+          <span>03</span><span class="text-ink">{{ t('booking.stepDetails') }}</span>
         </p>
         <div class="grid gap-5 sm:grid-cols-2">
           <BaseInput id="b-name" v-model="form.name" :label="t('booking.name')" :error="errors.name" required />
@@ -203,7 +229,7 @@ const inputBox =
           ></textarea>
         </div>
         <label class="mt-5 flex cursor-pointer items-start gap-3 text-sm text-ink/80">
-          <input v-model="form.interestedInExperiences" type="checkbox" class="mt-1 accent-[#c9a15b]" />
+          <input v-model="form.interestedInExperiences" type="checkbox" class="mt-1 cursor-pointer accent-[#c9a15b]" />
           <span>{{ t('booking.experiences') }}</span>
         </label>
       </section>
@@ -211,7 +237,7 @@ const inputBox =
       <!-- 03 Send -->
       <section>
         <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
-          <span>03</span><span class="text-ink">{{ t('booking.stepSend') }}</span>
+          <span>04</span><span class="text-ink">{{ t('booking.stepSend') }}</span>
         </p>
         <div class="border-l-2 border-brand bg-cream p-5 sm:p-6">
           <p class="label-kicker mb-2 text-xs text-brand">{{ t('booking.noticeTitle') }}</p>
@@ -219,7 +245,7 @@ const inputBox =
           <p class="mt-2 text-sm font-semibold text-ink">{{ t('booking.noPayment') }}</p>
         </div>
         <label class="mt-6 flex cursor-pointer items-start gap-3 text-sm text-ink/80">
-          <input v-model="form.consent" type="checkbox" class="mt-1 accent-[#c9a15b]" :aria-invalid="!!errors.consent" />
+          <input v-model="form.consent" type="checkbox" class="mt-1 cursor-pointer accent-[#c9a15b]" :aria-invalid="!!errors.consent" />
           <span>{{ t('booking.consent') }}<span class="text-brand"> *</span></span>
         </label>
         <p v-if="errors.consent" class="mt-1 text-xs text-red-600" role="alert">{{ errors.consent }}</p>
@@ -272,7 +298,7 @@ const inputBox =
       <div>
         <p class="label-kicker mb-4 text-brand">{{ t('booking.goodToKnow') }}</p>
         <ul class="space-y-2 border-t border-ink/15 text-sm text-ink/80">
-          <li v-for="k in ['info1', 'info2', 'info3']" :key="k" class="border-b border-ink/15 py-3">{{ t(`booking.${k}`) }}</li>
+          <li v-for="k in ['info1', 'info2', 'info3', 'info4']" :key="k" class="border-b border-ink/15 py-3">{{ t(`booking.${k}`) }}</li>
         </ul>
         <p class="mt-5 text-sm text-ink/80">
           {{ t('booking.questions') }}:

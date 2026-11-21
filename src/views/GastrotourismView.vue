@@ -193,15 +193,12 @@ useSeo(() => {
     <!-- Contact -->
     <section class="pb-16 lg:pb-24">
       <div class="mx-auto max-w-3xl rounded-3xl bg-cream px-6 py-10 text-center lg:px-10 lg:py-14">
-        <p class="label-kicker mb-3 text-brand">{{ t('svc.moreInfo') }}</p>
-        <p class="text-lg font-semibold sm:text-xl">{{ pick(g.contact.details) }}</p>
         <p class="label-kicker mt-8 mb-3 text-brand">{{ t('svc.register') }}</p>
         <a :href="`mailto:${g.contact.email}`" class="text-lg font-semibold hover:text-brand sm:text-xl">
           {{ g.contact.email }}
         </a>
         <div class="mt-8 flex flex-wrap justify-center gap-4">
           <BaseButton :href="`mailto:${g.contact.email}`">{{ t('svc.writeUs') }}</BaseButton>
-          <BaseButton :href="g.contact.pdf" variant="outline">{{ t('svc.program') }}</BaseButton>
         </div>
       </div>
     </section>

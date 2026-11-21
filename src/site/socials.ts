@@ -1,4 +1,3 @@
-// TODO: replace the remaining '#' placeholder (Substack) with the real profile URL.
 export const socials = [
   {
     name: 'Facebook',
@@ -12,7 +11,7 @@ export const socials = [
   },
   {
     name: 'Substack',
-    href: '#',
+    href: 'https://marathiatinos.substack.com',
     path: 'M22.54 6.42H1.46V8.7h21.08V6.42zM1.46 10.81V24L12 18.11 22.54 24V10.81H1.46zM22.54 0H1.46v2.28h21.08V0z',
   },
 ]

@@ -45,8 +45,8 @@ content source of truth when comparing. The local build should match it.
 ## 3. Stack
 
 - **Vue 3.5** (`<script setup>` + TypeScript), **Vite 6**, output to `dist/`.
-- **vue-router 4** — lazy views; explicit route per page per locale using real
-  slugs; route `meta` drives SEO/robots (see §6).
+- **vue-router 4** — lazy views; explicit route per page per locale at clean canonical
+  slugs (Greek at root, English under `/en/`); route `meta` drives SEO/robots (see §6).
 - **Pinia** — shared state only: `ui` (locale + mobile nav), `toast`,
   `subscriptionForm`. Page-local state stays in component refs.
 - **Tailwind CSS v4** — `@theme` tokens in `src/style.css` (`@tailwindcss/vite`).
@@ -102,11 +102,21 @@ home ×1, ~23 pages, 12 posts, 9 menu dishes, 6 testimonials, 51 portfolio items
 
 ## 6. Routing & SEO
 
+- **URL model:** Greek (default) lives at clean root slugs (`/history`, `/suites/suite-a`);
+  English is prefixed `/en/` (`/en/history`). The locale is encoded by the prefix, not by
+  per-WPML slugs. `localePath(base, locale, kind)` in `useLocale.ts` adds the prefix;
+  `pathForKey` / `canonicalBase` in `usePages.ts` resolve a content key to its canonical base.
 - `src/router/index.ts` builds routes from the content registry (`src/content`):
-  `/` (home, el), the EN home at its own slug if present, then **one route per page
-  per locale at its real hierarchical slug** (el always; en only when `slug.en !==
-  slug.el`), `/blog`, `/blog/:slug` per post, `/menu`, and a catch-all 404.
-  `meta` carries `{ locale, pageKey, noindex }`.
+  `/` and `/en` (home), `/blog` + `/en/blog`, `/menu` + `/en/menu`, then **one route per
+  page per locale at its canonical slug**, `/blog/:slug` per post (and `/en/blog/:slug`),
+  and a catch-all 404. `meta` carries `{ locale, pageKey, noindex }`.
+- **Canonical slugs** are hand-authored in `src/site/canonical.json` (`contentKey → clean base slug`).
+  `src/site/retired.json` (`retiredKey → targetBase`) lists pages merged into another URL (e.g.
+  `i-tinos` → `tinos`); a retired page gets no route, only redirects.
+- **Old-URL redirects:** every old WordPress slug (el and en, e.g. `/about/i-istoria-mas`,
+  `/about/our-history`) redirects to the new canonical. They are auto-derived at router load from each
+  item's `slug.el`/`slug.en` and skipped when the old path already equals a canonical route. These are
+  client-side vue-router redirects, **not HTTP 301s** (see limitation below).
 - Pages with a dedicated view are mapped by page key in `VIEW_BY_KEY`:
   `forma-kratisis-domatiou` → `ReservationView`, `contact-us` → `ContactView`,
   `biomatika-ergastiria-gia-epangelmaties` → `WorkshopsView`, `seminaria-gastrotourismou` →
@@ -116,9 +126,10 @@ home ×1, ~23 pages, 12 posts, 9 menu dishes, 6 testimonials, 51 portfolio items
   stats + book card). Everything else → `ContentPageView`. The three story pages have
   no hero images (type-only headers; philosophy keeps its arched side image). Their
   copy is hand-split verbatim in `src/site/about-pages.ts` (not generated); edit there.
-- Nav/footer are the **real DB menus** via `src/content/nav.ts` (consumed by
-  `AppHeader.vue`/`AppFooter.vue`). Top-level items with children that don't resolve
-  to a page are non-navigating dropdown headers (matches the live site).
+- Nav/footer are **hand-authored** in `src/site/navigation.ts` (`MENU` + `FOOTER` trees; each leaf
+  has a content `key` + `{el,en}` label, hrefs via `pathForKey`), consumed by
+  `AppHeader.vue`/`AppFooter.vue`. `src/content/nav.ts` (old DB menus) is no longer imported;
+  don't edit it for nav changes.
 - `router.afterEach` sets a `robots` meta tag: `index,follow` default;
   `noindex,nofollow` for 404 and **unreviewed English pages** (`enReviewed:false`).
 - `src/composables/useSeo.ts` sets title / description / canonical / hreflang (el+en)
@@ -127,7 +138,8 @@ home ×1, ~23 pages, 12 posts, 9 menu dishes, 6 testimonials, 51 portfolio items
 
 **Known SEO limitation:** this is a client-rendered SPA — meta is set at runtime.
 For guaranteed score parity consider prerendering (`vite-ssg`/`vite-plugin-ssr`) and
-server-side **301s** for any URL that changed. Not done yet.
+real server-side **301s** (host config) for old WordPress URLs and the `/en/` scheme; the current
+redirects are client-side only. Not done yet.
 
 ---
 
@@ -157,6 +169,8 @@ is a guesthouse booking *request* UI: custom range calendar `forms/DateRangePick
 `Intl`), guests steppers, room preference, details, consent, summary aside, thank-you panel. Copy in i18n
 `booking.*`. Still stubbed (`BookingPayload` → `submitForm`); the notice says the host will contact the guest
 to confirm and arrange payment.
+
+**Availability:** guest picks a room category first; its rooms' public Google Calendars are then read live (`src/composables/useAvailability.ts`; mapping in `src/site/rooms.ts`; env `VITE_GCAL_API_KEY` + 8 `VITE_GCAL_ID_*`); a night is blocked only if all rooms of the category are booked. **Minimum stay** (`src/site/stay-rules.ts`): Jul–Aug 3 nights; Jun/Sep 1 night Mon–Thu check-in, 2 nights Fri–Sun; enforced in the picker and on submit. Setup and conventions in `Bookings.md`.
 
 `src/stores/subscriptionForm.ts` → `submitForm(payload, endpoint?)`. With no
 `endpoint` it logs + simulates success (shows a success toast). `ReservationForm.vue`
@@ -208,7 +222,10 @@ src/
   stores/{ui,toast,subscriptionForm}.ts
   types/content.ts            the content model
   content/                    pages/*.ts, menu/testimonials/portfolio/nav/index
-  site/routes.json            canonical paths (both locales)
+  site/routes.json            canonical paths (both locales, for the sitemap)
+  site/canonical.json         contentKey → clean base slug (el root, en under /en/)
+  site/retired.json           retired page key → target base (redirect only)
+  site/navigation.ts          hand-authored MENU + FOOTER trees
   components/ + components/forms/
   composables/{useLocale,useSeo,usePages}.ts
   site/about-pages.ts         hand-authored sections for History/Philosophy/Maturation views
@@ -224,8 +241,9 @@ src/
 
 - `RichText` uses `v-html`, but only on **build-time, allow-listed** output from our
   own pipeline (not user input) — safe. Keep it that way; don't feed it raw shortcode.
-- Slugs are hierarchical — never flatten; it breaks URL/SEO parity with the live site.
-- No `/en` prefix — English pages have their own real slugs via WPML `trid`.
+- URLs are clean and canonical (`src/site/canonical.json`): Greek at root, English under `/en/`.
+  Old WordPress slugs only exist as redirects. Don't reintroduce per-locale WPML slugs as routes.
+- To retire/merge a page, add it to `src/site/retired.json` rather than deleting its content.
 - New media: copy it into `public/assets/` manually.
 - WooCommerce, auth/dashboard, RevSlider, Quform, js_composer are **intentionally
   gone** — don't reintroduce without a scope decision.
@@ -238,7 +256,7 @@ src/
    layout: a text-only opening (`HomeIntro.vue`, data `homeIntro` in `home-sections.ts`: welcome + "everything Tinos produces" story + History/Philosophy links), then alternating image/text bands (`HomeBand.vue`) driven by hand-authored
    data in `src/site/home-sections.ts` (philosophy, fish aging, services,
    guesthouse, delicacies, seaside), followed by an opening-hours strip, an awards
-   strip (`home-sections.ts` `homeAwards`, 5 original badges from `public/assets/awards/`, rendered by `AwardsPanel.vue`: cream rounded panel, title left, logos with thin vertical dividers; swipe row on mobile). The latest-news grid was removed from the homepage. Band copy
+   strip (`home-sections.ts` `homeAwards`, 7 badges from `public/assets/awards/`, rendered by `AwardsPanel.vue`: cream rounded panel, title left, logos with thin vertical dividers; swipe row on mobile). The latest-news grid was removed from the homepage. Band copy
    is verbatim teaser text sliced from the `home` content body (both locales
    `enReviewed:true`); each band's CTA links to a content key via `pathForKey`. New
    i18n keys live under `home.*` in `src/i18n/index.ts`. The raw `home` body in

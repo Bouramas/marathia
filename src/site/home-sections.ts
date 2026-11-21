@@ -127,7 +127,15 @@ export const homeBands: HomeBand[] = [
 ]
 
 /** Award badges: original images in public/assets/awards, framed uniformly by CSS in HomeView. */
-export const homeAwards: string[] = ['2019', '2020', 'skoufoi-2020', 'skoufoi-2024', 'fnl-2024'].map(
+export const homeAwards: string[] = [
+  '2019',
+  '2020',
+  'skoufoi-2020',
+  'skoufoi-2024',
+  'fnl-2024',
+  'fnl-2026',
+  'greek-kitchen-2026',
+].map(
   (n) => `/assets/awards/${n}.jpg`,
 )
 
