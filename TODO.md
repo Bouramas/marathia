@@ -47,22 +47,25 @@ Fix Social media links
 Mobile view fixes:
 main pages - awards section, the images should rotate constantly is a slow speed so all of them become visible at some point. Currently the last 2 are hidden unless you scroll.
 
-Fix Room reservation form.
+
 
 TODO
 Create Marinos Souranis signature email
-
-Check if in the booking section i can sync it with a google calendar of the room.
 
 Setup SEO tracking - after site goes live
 
 Create a README.md for the projecting explaining what is going on
 
-Extra requirements
-Minimum stay for months 
-    - June-September(1 night stays only for Monday to Thursday, 2 days minimum stays for Friday to Sunday)
-    - July-August (3 days minimum throughout the week)
+Make sure not too many requests towards google api are made. Is this a problem ? Can we do something about caching? maybe cache for each session?
+Create WEB3FORM account link with form in website.
+Fix Room reservation form - choose specific room
+
+TRANSFER EMAIL FROM PERSONAL TO 
+WHERE IS THE DOMAIN REGISTERED ? OEO ? 
 
 
+WEB3FORM PUBLIC KEY
+VITE_WEB3FORMS_KEY=3c58fc07-5bce-4b9d-98ed-bc34a0c25f1e
 
-https://marathiatinos.substack.com
+Change image in /booking page.
+Change image of hotel in main page.

@@ -167,7 +167,7 @@ DotSeparator sits at the end. Copy lives in i18n `contact.*`.
 **Booking page** (`/booking`, key `forma-kratisis-domatiou`, `ReservationView.vue` + `forms/ReservationForm.vue`)
 is a guesthouse booking *request* UI: custom range calendar `forms/DateRangePicker.vue` (no deps, el/en via
 `Intl`), guests steppers, room preference, details, consent, summary aside, thank-you panel. Copy in i18n
-`booking.*`. Still stubbed (`BookingPayload` → `submitForm`); the notice says the host will contact the guest
+`booking.*`. Submits via `submitForm` to Web3Forms (env `VITE_WEB3FORMS_KEY`; stub if unset); the notice says the host will contact the guest
 to confirm and arrange payment.
 
 **Availability:** guest picks a room category first; its rooms' public Google Calendars are then read live (`src/composables/useAvailability.ts`; mapping in `src/site/rooms.ts`; env `VITE_GCAL_API_KEY` + 8 `VITE_GCAL_ID_*`); a night is blocked only if all rooms of the category are booked. **Minimum stay** (`src/site/stay-rules.ts`): Jul–Aug 3 nights; Jun/Sep 1 night Mon–Thu check-in, 2 nights Fri–Sun; enforced in the picker and on submit. Setup and conventions in `Bookings.md`.

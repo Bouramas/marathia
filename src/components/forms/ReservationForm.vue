@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// Guesthouse booking REQUEST form. UI only: submit goes through the stubbed
-// subscriptionForm store (no backend). The host confirms and arranges payment.
+// Guesthouse booking REQUEST form. submit goes through the subscriptionForm
+// store (Web3Forms, key from VITE_WEB3FORMS_KEY). The host confirms and arranges payment.
 import { computed, reactive, ref, toRef, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSubscriptionFormStore, type BookingPayload } from '@/stores/subscriptionForm'
@@ -89,12 +89,35 @@ async function onSubmit() {
     return
   }
   submitting.value = true
-  const { ok } = await store.submitForm({ ...form })
+  const yn = (b?: boolean) => (b ? 'Yes' : 'No')
+  const summary = [
+    '',
+    `Room:         ${roomLabel.value}`,
+    `Check-in:     ${fmt(form.from)}`,
+    `Check-out:    ${fmt(form.to)}`,
+    `Nights:       ${nights.value}`,
+    `Guests:       ${form.adults} adult(s), ${form.children} child(ren)`,
+    '',
+    `Name:         ${form.name}`,
+    `Email:        ${form.email}`,
+    `Phone:        ${form.phone}`,
+    `Arrival time: ${form.arrivalTime || '-'}`,
+    `Experiences:  ${yn(form.interestedInExperiences)}`,
+    `Language:     ${locale.value}`,
+    '',
+    'Message:',
+    form.message?.trim() || '-',
+  ].join('\n')
+  const { ok } = await store.submitForm({ ...form }, undefined, {
+    booking_summary: summary,
+  })
   submitting.value = false
   if (ok) {
     sent.value = { ...form }
     toast.push(t('form.success'), 'success')
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  } else {
+    toast.push(t('booking.submitError'), 'error', 8000)
   }
 }
 
