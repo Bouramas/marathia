@@ -133,6 +133,7 @@ export const homeAwards: string[] = [
   'skoufoi-2020',
   'skoufoi-2024',
   'fnl-2024',
+  'fnl-2025',
   'fnl-2026',
   'greek-kitchen-2026',
 ].map(
