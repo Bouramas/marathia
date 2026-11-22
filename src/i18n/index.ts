@@ -28,7 +28,6 @@ const messages = {
       culture: 'Πολιτισμός',
       activities: 'Δραστηριότητες',
       discoveries: 'Ανακαλύψεις',
-      blog: 'Νέα',
       contact: 'Επικοινωνία',
       reservation: 'Κράτηση',
     },
@@ -178,7 +177,6 @@ const messages = {
     },
     common: {
       readMore: 'Διαβάστε περισσότερα',
-      backToBlog: 'Πίσω στα νέα',
       language: 'Γλώσσα',
       notFound: 'Η σελίδα δεν βρέθηκε',
       backHome: 'Επιστροφή στην αρχική',
@@ -209,7 +207,6 @@ const messages = {
       culture: 'Culture',
       activities: 'Activities',
       discoveries: 'Discoveries',
-      blog: 'News',
       contact: 'Contact',
       reservation: 'Reservation',
     },
@@ -359,7 +356,6 @@ const messages = {
     },
     common: {
       readMore: 'Read more',
-      backToBlog: 'Back to news',
       language: 'Language',
       notFound: 'Page not found',
       backHome: 'Back to home',

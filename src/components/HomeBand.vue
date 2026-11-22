@@ -12,6 +12,8 @@ withDefaults(
     image: string
     ctaLabel?: string
     ctaTo?: string
+    secondaryCtaLabel?: string
+    secondaryCtaTo?: string
     reverse?: boolean
     tint?: boolean
     links?: { to: string; label: string }[]
@@ -68,7 +70,8 @@ withDefaults(
               </RouterLink>
             </li>
           </ul>
-          <div v-else-if="ctaLabel && ctaTo" class="mt-8">
+          <div v-else-if="ctaLabel && ctaTo" class="mt-8 flex flex-wrap items-center gap-3">
+            <BaseButton v-if="secondaryCtaLabel && secondaryCtaTo" :to="secondaryCtaTo" variant="outline">{{ secondaryCtaLabel }}</BaseButton>
             <BaseButton :to="ctaTo" variant="outline">{{ ctaLabel }}</BaseButton>
           </div>
           <div v-if="extra" class="mt-12 border-t border-ink/15 pt-12">

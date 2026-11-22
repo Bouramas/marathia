@@ -57,6 +57,8 @@ useSeo(() => ({
       :image="band.image"
       :cta-label="pick(band.ctaLabel)"
       :cta-to="pathForKey(band.ctaKey, locale) || '#'"
+      :secondary-cta-label="band.secondaryCta && pick(band.secondaryCta.label)"
+      :secondary-cta-to="band.secondaryCta && (pathForKey(band.secondaryCta.key, locale) || '#')"
       :links="band.links?.map((l) => ({ to: pathForKey(l.key, locale) || '#', label: pick(l.label) }))"
       :framed="band.framed"
       :arch="band.arch"

@@ -12,7 +12,7 @@ export interface Localized<T = string> {
   en: T
 }
 
-export type ContentType = 'home' | 'page' | 'post' | 'menu' | 'testimonial' | 'portfolio'
+export type ContentType = 'home' | 'page' | 'menu' | 'testimonial'
 
 export interface Seo {
   title: Localized
@@ -36,7 +36,7 @@ export interface PageContent {
   hero?: Hero
   /** Sanitized HTML body per locale. */
   body: Localized
-  /** ISO date for posts. */
+  /** ISO date (original WordPress publish date). */
   date?: string
   seo: Seo
   /**

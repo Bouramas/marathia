@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import type { Locale, PageContent } from '@/types/content'
-import { pages, posts, home } from '@/content'
+import { pages, home } from '@/content'
 import { canonicalBase } from '@/composables/usePages'
 import { localePath } from '@/composables/useLocale'
 import { useUiStore } from '@/stores/ui'
@@ -14,8 +14,6 @@ const RETIRED = retired as Record<string, string>
 
 const ContentPageView = () => import('@/views/ContentPageView.vue')
 const HomeView = () => import('@/views/HomeView.vue')
-const BlogListView = () => import('@/views/BlogListView.vue')
-const PostView = () => import('@/views/PostView.vue')
 const MenuView = () => import('@/views/MenuView.vue')
 const ReservationView = () => import('@/views/ReservationView.vue')
 const ContactView = () => import('@/views/ContactView.vue')
@@ -53,8 +51,7 @@ function componentFor(page: PageContent) {
 /** Canonical path for a content item in a locale (el at clean root, en under /en/). */
 function canonicalPathFor(page: PageContent, locale: Locale): string {
   if (page.type === 'home') return localePath('', locale)
-  if (page.type === 'post') return localePath(page.slug.el, locale, 'post')
-  return localePath(canonicalBase(page), locale, 'page')
+  return localePath(canonicalBase(page), locale)
 }
 
 const LOCALES: Locale[] = ['el', 'en']
@@ -62,8 +59,6 @@ const LOCALES: Locale[] = ['el', 'en']
 const routes: RouteRecordRaw[] = [
   { path: '/', name: 'home-el', component: HomeView, meta: { locale: 'el', pageKey: 'home' } },
   { path: '/en', name: 'home-en', component: HomeView, meta: { locale: 'en', pageKey: 'home' } },
-  { path: '/blog', name: 'blog-el', component: BlogListView, meta: { locale: 'el' } },
-  { path: '/en/blog', name: 'blog-en', component: BlogListView, meta: { locale: 'en' } },
   { path: '/menu', name: 'menu-el', component: MenuView, meta: { locale: 'el' } },
   { path: '/en/menu', name: 'menu-en', component: MenuView, meta: { locale: 'en' } },
 ]
@@ -87,19 +82,6 @@ for (const page of pages) {
   }
 }
 
-// Blog posts (el + en), under /blog and /en/blog.
-for (const post of posts) {
-  for (const locale of LOCALES) {
-    const path = canonicalPathFor(post, locale)
-    routes.push({
-      path,
-      name: `post-${locale}-${post.key}`,
-      component: PostView,
-      meta: { locale, pageKey: post.key, noindex: locale === 'en' && !post.enReviewed },
-    })
-    canonicalPaths.add(path)
-  }
-}
 
 // Redirect every old WordPress URL (both locales) to its new canonical URL, so
 // existing SEO/links carry over. Derived from the real WP slugs on each content
@@ -111,18 +93,13 @@ function addRedirect(from: string, to: string) {
 }
 for (const page of [home, ...pages]) {
   const retireBase = RETIRED[page.key]
-  const elTarget = retireBase ? localePath(retireBase, 'el', 'page') : canonicalPathFor(page, 'el')
-  const enTarget = retireBase ? localePath(retireBase, 'en', 'page') : canonicalPathFor(page, 'en')
-  addRedirect(localePath(page.slug.el, 'el', 'page'), elTarget)
+  const elTarget = retireBase ? localePath(retireBase, 'el') : canonicalPathFor(page, 'el')
+  const enTarget = retireBase ? localePath(retireBase, 'en') : canonicalPathFor(page, 'en')
+  addRedirect(localePath(page.slug.el, 'el'), elTarget)
   // A retired page has no canonical route, so also redirect its /en/ twin.
-  if (retireBase) addRedirect(localePath(page.slug.el, 'en', 'page'), enTarget)
+  if (retireBase) addRedirect(localePath(page.slug.el, 'en'), enTarget)
   if (page.slug.en && page.slug.en !== page.slug.el) {
-    addRedirect(localePath(page.slug.en, 'el', 'page'), enTarget)
-  }
-}
-for (const post of posts) {
-  if (post.slug.en && post.slug.en !== post.slug.el) {
-    addRedirect(localePath(post.slug.en, 'el', 'post'), canonicalPathFor(post, 'en'))
+    addRedirect(localePath(page.slug.en, 'el'), enTarget)
   }
 }
 for (const [from, to] of redirects) {

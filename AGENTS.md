@@ -50,7 +50,7 @@ content source of truth when comparing. The local build should match it.
 - **Pinia** — shared state only: `ui` (locale + mobile nav), `toast`,
   `subscriptionForm`. Page-local state stays in component refs.
 - **Tailwind CSS v4** — `@theme` tokens in `src/style.css` (`@tailwindcss/vite`).
-- **vue-i18n 10** — UI chrome strings only (nav/footer/forms). Page/post copy lives
+- **vue-i18n 10** — UI chrome strings only (nav/footer/forms). Page copy lives
   in typed content modules, not i18n files.
 - **@fontsource** self-hosted Open Sans + Karla (no Google Fonts CDN → GDPR).
 - **vite-plugin-sitemap** + `public/robots.txt`.
@@ -95,7 +95,7 @@ history for `scripts/{extract-content,generate-content,copy-media}.mjs` if the l
 Static media lives in `public/assets/` (`uploads/`, `video/hero.mp4`, `hero/`, `logo.png`, `pdf/`).
 
 ### Current content counts
-home ×1, ~23 pages, 12 posts, 9 menu dishes, 6 testimonials, 51 portfolio items;
+home ×1, ~23 pages, 9 menu dishes, 6 testimonials;
 26/101 groups have real English.
 
 ---
@@ -107,9 +107,9 @@ home ×1, ~23 pages, 12 posts, 9 menu dishes, 6 testimonials, 51 portfolio items
   per-WPML slugs. `localePath(base, locale, kind)` in `useLocale.ts` adds the prefix;
   `pathForKey` / `canonicalBase` in `usePages.ts` resolve a content key to its canonical base.
 - `src/router/index.ts` builds routes from the content registry (`src/content`):
-  `/` and `/en` (home), `/blog` + `/en/blog`, `/menu` + `/en/menu`, then **one route per
-  page per locale at its canonical slug**, `/blog/:slug` per post (and `/en/blog/:slug`),
-  and a catch-all 404. `meta` carries `{ locale, pageKey, noindex }`.
+  `/` and `/en` (home), `/menu` + `/en/menu`, then **one route per
+  page per locale at its canonical slug**, and a catch-all 404. The blog was removed (no
+  `/blog` routes; old blog URLs show the 404 page). `meta` carries `{ locale, pageKey, noindex }`.
 - **Canonical slugs** are hand-authored in `src/site/canonical.json` (`contentKey → clean base slug`).
   `src/site/retired.json` (`retiredKey → targetBase`) lists pages merged into another URL (e.g.
   `i-tinos` → `tinos`); a retired page gets no route, only redirects.
@@ -146,7 +146,7 @@ redirects are client-side only. Not done yet.
 ## 7. i18n model (IMPORTANT)
 
 - `src/i18n/index.ts` holds UI chrome strings (el + en). Greek is default.
-- Page/post copy is in the content modules, keyed `{ el, en }`.
+- Page copy is in the content modules, keyed `{ el, en }`.
 - **`enReviewed`**: `true` only when a real WPML English page existed. For pages that
   were Greek-only, the generator stores the Greek text as the `en` value with
   `enReviewed:false` — a **fallback, not a translation**. `DraftTranslationNotice.vue`
@@ -221,7 +221,7 @@ src/
   i18n/index.ts
   stores/{ui,toast,subscriptionForm}.ts
   types/content.ts            the content model
-  content/                    pages/*.ts, menu/testimonials/portfolio/nav/index
+  content/                    pages/*.ts, menu/testimonials/nav/index
   site/routes.json            canonical paths (both locales, for the sitemap)
   site/canonical.json         contentKey → clean base slug (el root, en under /en/)
   site/retired.json           retired page key → target base (redirect only)
@@ -231,7 +231,7 @@ src/
   site/about-pages.ts         hand-authored sections for History/Philosophy/Maturation views
   site/services-pages.ts      hand-authored sections for Workshops/Gastrotourism/Consulting views
   site/tinos-pages.ts         hand-authored sections + entries for Tinos/Attractions/Beaches views (placeholder images in PH)
-  views/*.vue                 Home, ContentPage, BlogList, Post, Menu, Reservation, Contact, History, Philosophy, Maturation, NotFound
+  views/*.vue                 Home, ContentPage, Menu, Reservation, Contact, History, Philosophy, Maturation, NotFound
 ```
 `src/content/*` and `src/site/routes.json` are now hand-maintained (generator removed).
 

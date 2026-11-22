@@ -23,21 +23,8 @@ import _souites_kai_domatia_junior_suites from './pages/souites-kai-domatia-juni
 import _souites_kai_domatia_superior_diklina_orofou from './pages/souites-kai-domatia-superior-diklina-orofou'
 import _symvouleftiki from './pages/symvouleftiki'
 import _ta_diamerismata_mas from './pages/ta-diamerismata-mas'
-import _post_4_hands_dinner_me_tin_omada_tis_marathias_sto_makris_restaurant from './pages/post-4-hands-dinner-me-tin-omada-tis-marathias-sto-makris-restaurant'
-import _post_5965 from './pages/post-5965'
-import _post_6008 from './pages/post-6008'
-import _post_arthro_13_selidon_gia_ton_marino_sourani_sto_egkyro_effilee_entheto_sto_der_spiegel from './pages/post-arthro-13-selidon-gia-ton-marino-sourani-sto-egkyro-effilee-entheto-sto-der-spiegel'
-import _post_arthro_gia_ti_marathia_sto_griechenland_zeitung from './pages/post-arthro-gia-ti-marathia-sto-griechenland-zeitung'
-import _post_h_gefstiki_synergasia_tis_marathias_me_to_zillers from './pages/post-h-gefstiki-synergasia-tis-marathias-me-to-zillers'
-import _post_marathia_x_phaedra_x_papadopoulos_viticulture from './pages/post-marathia-x-phaedra-x-papadopoulos-viticulture'
-import _post_o_koryfaios_chef_daniel_humm_sti_marathia from './pages/post-o-koryfaios-chef-daniel-humm-sti-marathia'
-import _post_orimansi_psarion_sti_marathia from './pages/post-orimansi-psarion-sti-marathia'
-import _post_synentefxi_tou_marinou_sourani_sti_nana_dareioti_sto_cantina_tou_protou_thematos from './pages/post-synentefxi-tou-marinou-sourani-sti-nana-dareioti-sto-cantina-tou-protou-thematos'
-import _post_synentefxi_tou_marinou_sourani_sto_travel_gr from './pages/post-synentefxi-tou-marinou-sourani-sto-travel-gr'
-import _post_to_vivlio_tou_marinou_sourani_sto_swiss_culinary_academy_by_bhms from './pages/post-to-vivlio-tou-marinou-sourani-sto-swiss-culinary-academy-by-bhms'
 export { default as menu } from './menu'
 export { default as testimonials } from './testimonials'
-export { default as portfolio } from './portfolio'
 export { default as nav } from './nav'
 
 export const home: PageContent = _home
@@ -67,22 +54,8 @@ export const pages: PageContent[] = [
   _ta_diamerismata_mas,
 ]
 
-export const posts: PageContent[] = [
-  _post_4_hands_dinner_me_tin_omada_tis_marathias_sto_makris_restaurant,
-  _post_5965,
-  _post_6008,
-  _post_arthro_13_selidon_gia_ton_marino_sourani_sto_egkyro_effilee_entheto_sto_der_spiegel,
-  _post_arthro_gia_ti_marathia_sto_griechenland_zeitung,
-  _post_h_gefstiki_synergasia_tis_marathias_me_to_zillers,
-  _post_marathia_x_phaedra_x_papadopoulos_viticulture,
-  _post_o_koryfaios_chef_daniel_humm_sti_marathia,
-  _post_orimansi_psarion_sti_marathia,
-  _post_synentefxi_tou_marinou_sourani_sti_nana_dareioti_sto_cantina_tou_protou_thematos,
-  _post_synentefxi_tou_marinou_sourani_sto_travel_gr,
-  _post_to_vivlio_tou_marinou_sourani_sto_swiss_culinary_academy_by_bhms,
-]
 
-export const allContent: PageContent[] = [_home, ...pages, ...posts]
+export const allContent: PageContent[] = [_home, ...pages]
 
 export function findBySlug(slug: string): PageContent | undefined {
   return allContent.find((p) => p.slug.el === slug || p.slug.en === slug)

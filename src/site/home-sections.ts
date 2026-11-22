@@ -15,6 +15,8 @@ export interface HomeBand {
   /** Content key for the "read more" target (resolved per locale). */
   ctaKey: string
   ctaLabel: Localized
+  /** Optional secondary button rendered before the main CTA. */
+  secondaryCta?: { key: string; label: Localized }
   /** Optional extra links (content keys) shown as an elegant list instead of the single CTA. */
   links?: { key: string; label: Localized }[]
   /** Portrait crop with an offset gold outline. */
@@ -91,6 +93,7 @@ export const homeBands: HomeBand[] = [
     arch: true,
     ctaKey: 'forma-kratisis-domatiou',
     ctaLabel: { el: 'Κάντε κράτηση', en: 'Book now' },
+    secondaryCta: { key: 'souites-kai-domatia', label: { el: 'Δείτε περισσότερα', en: 'See more' } },
     reverse: true,
     tint: true,
   },

@@ -37,9 +37,9 @@ export const MENU: NavItem[] = [
         key: 'souites-kai-domatia',
         label: { el: 'Σουίτες', en: 'Suites' },
         children: [
-          { key: 'souites-kai-domatia/junior-suites', label: { el: 'Σουίτα Α', en: 'Suite A' } },
-          { key: 'souites-kai-domatia/superior-diklina-orofou', label: { el: 'Σουίτα Β', en: 'Suite B' } },
-          { key: 'souites-kai-domatia/diklina', label: { el: 'Σουίτα Γ', en: 'Suite C' } },
+          { key: 'souites-kai-domatia/junior-suites', label: { el: 'Junior Suites', en: 'Junior Suites' } },
+          { key: 'souites-kai-domatia/diklina', label: { el: 'Standard Δίκλινα', en: 'Standard Doubles' } },
+          { key: 'souites-kai-domatia/superior-diklina-orofou', label: { el: 'Superior Δίκλινα', en: 'Superior Doubles' } },
         ],
       },
     ],

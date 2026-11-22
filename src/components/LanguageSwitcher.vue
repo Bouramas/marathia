@@ -20,7 +20,6 @@ function pathInLocale(target: Locale): string {
   if (pageKey) return pathForKey(pageKey, target) || '/'
   const name = typeof route.name === 'string' ? route.name : ''
   const prefix = target === 'en' ? '/en' : ''
-  if (name.startsWith('blog-')) return `${prefix}/blog`
   if (name.startsWith('menu-')) return `${prefix}/menu`
   return prefix || '/'
 }

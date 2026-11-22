@@ -1,4 +1,4 @@
-import { allContent, pages, posts, home } from '@/content'
+import { allContent, pages, home } from '@/content'
 import type { Locale, PageContent } from '@/types/content'
 import { localePath } from '@/composables/useLocale'
 import canonical from '@/site/canonical.json'
@@ -22,8 +22,7 @@ export function pathForKey(key: string, locale: Locale): string | undefined {
   if (key === 'home') return localePath('', locale)
   const p = byKey.get(key)
   if (!p) return undefined
-  if (p.type === 'post') return localePath(p.slug.el, locale, 'post')
-  return localePath(canonicalBase(p), locale, 'page')
+  return localePath(canonicalBase(p), locale)
 }
 
-export { pages, posts, home, allContent }
+export { pages, home, allContent }

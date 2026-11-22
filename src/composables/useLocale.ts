@@ -20,11 +20,10 @@ export function useLocale() {
 /**
  * Build a route path from a canonical base slug. Greek (default) lives at the
  * clean root slug ("/history"); English is prefixed with "/en/" ("/en/history").
- * The empty base is the home page ("/" el, "/en" en). Posts live under /blog/.
+ * The empty base is the home page ("/" el, "/en" en).
  */
-export function localePath(base: string, locale: Locale, kind: 'page' | 'post' = 'page'): string {
+export function localePath(base: string, locale: Locale): string {
   const prefix = locale === 'en' ? '/en' : ''
-  if (kind === 'post') return `${prefix}/blog/${base}`
   if (base === '') return prefix || '/'
   return `${prefix}/${base}`
 }
