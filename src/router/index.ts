@@ -26,6 +26,8 @@ const ConsultingView = () => import('@/views/ConsultingView.vue')
 const TinosView = () => import('@/views/TinosView.vue')
 const AttractionsView = () => import('@/views/AttractionsView.vue')
 const BeachesView = () => import('@/views/BeachesView.vue')
+const SuitesView = () => import('@/views/SuitesView.vue')
+const RoomView = () => import('@/views/RoomView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
 
 // Content keys that render a dedicated, hand-designed view instead of the
@@ -42,6 +44,10 @@ const VIEW_BY_KEY: Record<string, () => Promise<unknown>> = {
   'i-tinos/me-mia-matia': TinosView,
   'i-tinos/mi-chasete': AttractionsView,
   'i-tinos/paralies': BeachesView,
+  'souites-kai-domatia': SuitesView,
+  'souites-kai-domatia/diklina': RoomView,
+  'souites-kai-domatia/superior-diklina-orofou': RoomView,
+  'souites-kai-domatia/junior-suites': RoomView,
 }
 
 function componentFor(page: PageContent) {

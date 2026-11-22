@@ -102,7 +102,7 @@ home ×1, ~23 pages, 9 menu dishes, 6 testimonials;
 
 ## 6. Routing & SEO
 
-- **URL model:** Greek (default) lives at clean root slugs (`/history`, `/suites/suite-a`);
+- **URL model:** Greek (default) lives at clean root slugs (`/history`, `/suites/junior`);
   English is prefixed `/en/` (`/en/history`). The locale is encoded by the prefix, not by
   per-WPML slugs. `localePath(base, locale, kind)` in `useLocale.ts` adds the prefix;
   `pathForKey` / `canonicalBase` in `usePages.ts` resolve a content key to its canonical base.
@@ -121,7 +121,7 @@ home ×1, ~23 pages, 9 menu dishes, 6 testimonials;
   `forma-kratisis-domatiou` → `ReservationView`, `contact-us` → `ContactView`,
   `biomatika-ergastiria-gia-epangelmaties` → `WorkshopsView`, `seminaria-gastrotourismou` →
   `GastrotourismView`, `symvouleftiki` → `ConsultingView` (copy hand-split verbatim in
-  `src/site/services-pages.ts`; edit there),   `i-tinos/me-mia-matia` → `TinosView`, `i-tinos/mi-chasete` → `AttractionsView`, `i-tinos/paralies` → `BeachesView` (copy + placeholder images in `src/site/tinos-pages.ts`), `about/i-istoria-mas` → `HistoryView` (timeline), `about/i-filosofia-mas` →
+  `src/site/services-pages.ts`; edit there),   `i-tinos/me-mia-matia` → `TinosView`, `i-tinos/mi-chasete` → `AttractionsView`, `i-tinos/paralies` → `BeachesView` (copy + placeholder images in `src/site/tinos-pages.ts`), `souites-kai-domatia` → `SuitesView` (guesthouse overview; copy + room data in `src/site/suites-page.ts`), the three room pages (`…/diklina`, `…/superior-diklina-orofou`, `…/junior-suites`) → shared `RoomView` (hero, facts, gallery + lightbox, themed amenities; data in `src/site/room-pages.ts`, components `RoomGallery`/`AmenityGroup`), `about/i-istoria-mas` → `HistoryView` (timeline), `about/i-filosofia-mas` →
   `PhilosophyView` (five principles), `orimansi-psarion` → `MaturationView` (story rows +
   stats + book card). Everything else → `ContentPageView`. The three story pages have
   no hero images (type-only headers; philosophy keeps its arched side image). Their

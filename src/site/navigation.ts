@@ -35,11 +35,11 @@ export const MENU: NavItem[] = [
       { key: 'forma-kratisis-domatiou', label: { el: 'Κρατήσεις', en: 'Booking' } },
       {
         key: 'souites-kai-domatia',
-        label: { el: 'Σουίτες', en: 'Suites' },
+        label: { el: 'Όλες οι σουίτες και τα δωμάτια', en: 'All suites & rooms' },
         children: [
-          { key: 'souites-kai-domatia/junior-suites', label: { el: 'Junior Suites', en: 'Junior Suites' } },
           { key: 'souites-kai-domatia/diklina', label: { el: 'Standard Δίκλινα', en: 'Standard Doubles' } },
           { key: 'souites-kai-domatia/superior-diklina-orofou', label: { el: 'Superior Δίκλινα', en: 'Superior Doubles' } },
+          { key: 'souites-kai-domatia/junior-suites', label: { el: 'Junior Suites', en: 'Junior Suites' } },
         ],
       },
     ],

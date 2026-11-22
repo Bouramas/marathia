@@ -72,10 +72,10 @@ function toggleGroup(label: string) { openGroup.value = openGroup.value === labe
             <div class="nav-panel absolute left-1/2 top-full w-64 pt-5">
               <ul class="rounded-md border border-ink/10 bg-white py-2 text-center text-ink shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)]">
                 <li v-for="c in item.children" :key="pick(c.label)">
-                  <RouterLink v-if="c.key" :to="href(c)!" class="droplink" active-class="text-brand">
+                  <RouterLink v-if="c.key" :to="href(c)!" class="droplink" :class="{ 'droplink-parent': c.children }" active-class="text-brand">
                     {{ pick(c.label) }}
                   </RouterLink>
-                  <ul v-if="c.children" class="mb-1">
+                  <ul v-if="c.children" class="droplist-sub mb-1">
                     <li v-for="s in c.children" :key="pick(s.label)">
                       <RouterLink v-if="s.key" :to="href(s)!" class="droplink droplink-sub" active-class="text-brand">
                         {{ pick(s.label) }}
@@ -139,16 +139,17 @@ function toggleGroup(label: string) { openGroup.value = openGroup.value === labe
                     v-if="c.key"
                     :to="href(c)!"
                     class="block py-2.5 pl-4 text-xs tracking-[0.1em] uppercase text-ink/70"
+                    :class="{ 'font-semibold text-ink': c.children }"
                     @click="ui.toggleMobileNav(false)"
                   >
                     {{ pick(c.label) }}
                   </RouterLink>
-                  <ul v-if="c.children">
+                  <ul v-if="c.children" class="ml-4 border-l border-brand/50">
                     <li v-for="s in c.children" :key="pick(s.label)">
                       <RouterLink
                         v-if="s.key"
                         :to="href(s)!"
-                        class="block py-2 pl-8 text-xs tracking-[0.1em] uppercase text-ink/55"
+                        class="block py-2 pl-4 text-xs tracking-[0.1em] uppercase text-ink/55"
                         @click="ui.toggleMobileNav(false)"
                       >
                         {{ pick(s.label) }}
@@ -223,6 +224,19 @@ function toggleGroup(label: string) { openGroup.value = openGroup.value === labe
 .droplink:hover {
   color: var(--color-brand);
   background: var(--color-cream);
+}
+.droplink-parent {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.droplist-sub {
+  margin: 0 1.25rem 0.25rem 2.5rem;
+  border-left: 1px solid color-mix(in srgb, var(--color-brand) 60%, transparent);
+}
+.droplist-sub .droplink-sub {
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+  text-align: left;
 }
 .droplink-sub {
   padding: 0.45rem 1.25rem;
