@@ -8,3 +8,4 @@ backup/*
 scripts/out
 .env.local
 .env.*.local
+.env
