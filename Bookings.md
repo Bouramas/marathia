@@ -9,14 +9,17 @@ add confirmed bookings to the Google Calendar by hand.
 
 ## How it works
 
-- The guest picks a room category first (Standard, Superior, Junior). Until then no Google
+- Flow: guests first (adults + children), then only the room categories that fit the party, then
+  one specific room of that category, then dates. Capacity and room list live in
+  `src/site/rooms.ts` (`fitsCategory`): Standard sleeps 2, Superior 2 + 1 child up to 10 (couch),
+  Junior 4. A party that fits no room sees a contact notice. Until a room is chosen no Google
   Calendar request is made and the date picker is locked.
-- Each physical room has its own calendar. Choosing a category loads the calendars of all its
-  rooms (`src/composables/useAvailability.ts`).
-- A night is blocked only when **every** room of the category is booked that night.
+- Each physical room has its own calendar. Choosing a room loads only that room's calendar
+  (`src/composables/useAvailability.ts`); a night is blocked when that room is booked.
 - A blocked day cannot be a check-in; it can be a check-out if the night before is free. A range
   spanning a blocked night is rejected.
-- Changing category clears the chosen dates. Results are cached per category.
+- Changing guests, category or room clears what depends on it (room, dates). Results are cached per room.
+- `/booking?room=<room id>` (e.g. `junior-2`) preselects a room; the room pages use it for "Book this room".
 - If a key or calendar ID is missing, or a request fails, that room counts as free (dates are
   never blocked wrongly) and the form shows a notice on failure.
 
@@ -36,11 +39,11 @@ know"; the form also re-validates on submit. Copy is in i18n `booking.minStay*` 
 
 Edit one file: `src/site/rooms.ts`. Each room reads its Calendar ID from its own env var:
 
-| Category | Rooms | Env vars |
+| Category | Rooms (in env order) | Env vars |
 |---|---|---|
-| Standard | 3 | `VITE_GCAL_ID_STANDARD_1`, `_2`, `_3` |
-| Superior | 2 | `VITE_GCAL_ID_SUPERIOR_1`, `_2` |
-| Junior suites | 3 | `VITE_GCAL_ID_JUNIOR_1`, `_2`, `_3` |
+| Standard | 3 (A, B, C) | `VITE_GCAL_ID_STANDARD_1`, `_2`, `_3` |
+| Superior | 2 (A, B) | `VITE_GCAL_ID_SUPERIOR_1`, `_2` |
+| Junior suites | 3 (1, 2, 3) | `VITE_GCAL_ID_JUNIOR_1`, `_2`, `_3` |
 
 The API key (`VITE_GCAL_API_KEY`) is shared. To add a room, add its env var to `rooms.ts` and
 `env.d.ts`.

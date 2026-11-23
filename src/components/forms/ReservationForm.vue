@@ -2,6 +2,7 @@
 // Guesthouse booking REQUEST form. submit goes through the subscriptionForm
 // store (Web3Forms, key from VITE_WEB3FORMS_KEY). The host confirms and arranges payment.
 import { computed, reactive, ref, toRef, watch, type Ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSubscriptionFormStore, type BookingPayload } from '@/stores/subscriptionForm'
 import { useToastStore } from '@/stores/toast'
@@ -12,10 +13,11 @@ import BaseButton from '../BaseButton.vue'
 import DateRangePicker from './DateRangePicker.vue'
 import { useAvailability } from '@/composables/useAvailability'
 import { minNights } from '@/site/stay-rules'
-import { ROOM_CATEGORIES, type CategoryId } from '@/site/rooms'
+import { ROOM_CATEGORIES, EXTRA_CHILD_MAX_AGE, categoryById, fitsCategory, unitById } from '@/site/rooms'
 
 const { t } = useI18n()
-const { locale } = useLocale()
+const { locale, pick } = useLocale()
+const route = useRoute()
 const store = useSubscriptionFormStore()
 const toast = useToastStore()
 
@@ -25,6 +27,7 @@ const blank = (): BookingPayload => ({
   adults: 2,
   children: 0,
   room: '',
+  unit: '',
   name: '',
   email: '',
   phone: '',
@@ -35,13 +38,35 @@ const blank = (): BookingPayload => ({
 })
 
 const form = reactive<BookingPayload>(blank())
-const { booked, loading, error: availabilityError } = useAvailability(toRef(form, 'room') as Ref<CategoryId | ''>)
-const hasRoom = computed(() => !!form.room)
-// Dates depend on the room's calendars, so a different room invalidates the chosen range.
-watch(() => form.room, () => {
+const { booked, loading, error: availabilityError } = useAvailability(toRef(form, 'unit') as Ref<string>)
+const hasUnit = computed(() => !!form.unit)
+
+// Guests come first: only categories whose beds fit the party are offered.
+const guestCount = computed(() => form.adults + form.children)
+const fitting = computed(() => ROOM_CATEGORIES.filter((c) => fitsCategory(c, form.adults, form.children)))
+const category = computed(() => categoryById(form.room))
+const unitInfo = computed(() => unitById(form.unit))
+
+watch([() => form.adults, () => form.children], () => {
+  if (form.room && !fitting.value.some((c) => c.id === form.room)) form.room = ''
+  if (!form.room && fitting.value.length === 1) form.room = fitting.value[0].id
+})
+// A different category invalidates the chosen room; a different room invalidates the dates
+// (each room has its own calendar).
+watch(() => form.room, (id) => {
+  if (form.unit && unitById(form.unit)?.category.id !== id) form.unit = ''
+})
+watch(() => form.unit, () => {
   form.from = ''
   form.to = ''
 })
+
+// "Book this room" links from the room pages: /booking?room=junior-2
+const preset = unitById(String(route.query.room ?? ''))
+if (preset && fitsCategory(preset.category, form.adults, form.children)) {
+  form.room = preset.category.id
+  form.unit = preset.unit.id
+}
 const errors = reactive<Record<string, string>>({})
 const submitting = ref(false)
 const sent = ref<BookingPayload | null>(null)
@@ -59,8 +84,8 @@ const dateFmt = computed(
 )
 const fmt = (s: string) => dateFmt.value.format(new Date(s))
 const roomLabel = computed(() => {
-  const r = ROOM_CATEGORIES.find((c) => c.id === form.room)
-  return r ? t(r.labelKey) : '—'
+  const r = unitInfo.value
+  return r ? `${t(r.category.labelKey)} · ${pick(r.unit.label)}` : '—'
 })
 
 function step(field: 'adults' | 'children', delta: number) {
@@ -70,6 +95,7 @@ function step(field: 'adults' | 'children', delta: number) {
 
 function validate(): boolean {
   errors.room = form.room ? '' : t('booking.errRoom')
+  errors.unit = form.unit ? '' : t('booking.errUnit')
   const min = form.from ? minNights(form.from) : 1
   errors.dates = !(form.from && form.to)
     ? t('booking.errDates')
@@ -92,7 +118,7 @@ async function onSubmit() {
   const yn = (b?: boolean) => (b ? 'Yes' : 'No')
   const summary = [
     '',
-    `Room:         ${roomLabel.value}`,
+    `Room:         ${roomLabel.value}${unitInfo.value ? ` (${pick(unitInfo.value.unit.beds)})` : ''}`,
     `Check-in:     ${fmt(form.from)}`,
     `Check-out:    ${fmt(form.to)}`,
     `Nights:       ${nights.value}`,
@@ -151,52 +177,13 @@ const inputBox =
     </div>
 
     <form v-else class="grid gap-12" novalidate @submit.prevent="onSubmit">
-      <!-- 01 Room -->
+      <!-- 01 Guests -->
       <section>
-        <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
-          <span>01</span><span class="text-ink">{{ t('booking.stepRoom') }}</span>
+        <p class="label-kicker mb-3 flex items-baseline gap-5 text-brand">
+          <span>01</span><span class="text-ink">{{ t('booking.stepGuests') }}</span>
         </p>
-        <fieldset>
-          <legend class="sr-only">{{ t('booking.room') }}</legend>
-          <div class="grid gap-3 sm:grid-cols-3">
-            <label
-              v-for="r in ROOM_CATEGORIES"
-              :key="r.id"
-              class="flex cursor-pointer items-start gap-3 border bg-white px-4 py-3 transition-colors hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand/5"
-              :class="form.room === r.id ? 'border-brand' : 'border-ink/20'"
-            >
-              <input v-model="form.room" type="radio" name="room" :value="r.id" class="mt-1 cursor-pointer accent-[#c9a15b]" />
-              <span class="flex-1">
-                <span class="block text-sm font-semibold">{{ t(r.labelKey) }}</span>
-                <RouterLink
-                  v-if="pathForKey(r.pageKey, locale)"
-                  :to="pathForKey(r.pageKey, locale)!"
-                  target="_blank"
-                  class="text-xs text-brand underline-offset-2 hover:underline"
-                  @click.stop
-                >{{ t('booking.viewRoom') }} &rarr;</RouterLink>
-              </span>
-            </label>
-          </div>
-        </fieldset>
-        <p v-if="errors.room" class="mt-2 text-xs text-red-600" role="alert">{{ errors.room }}</p>
-      </section>
-
-      <!-- 02 Stay -->
-      <section>
-        <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
-          <span>02</span><span class="text-ink">{{ t('booking.stepStay') }}</span>
-        </p>
-        <p v-if="!hasRoom" class="mb-4 text-sm text-ink/60">{{ t('booking.selectRoomFirst') }}</p>
-        <div :class="hasRoom ? '' : 'pointer-events-none select-none opacity-40'" :inert="!hasRoom" :aria-busy="loading">
-          <DateRangePicker v-model:from="form.from" v-model:to="form.to" :booked="booked" :loading="loading" :error="errors.dates" />
-          <p v-if="loading" class="mt-2 text-xs text-ink/60" aria-live="polite">{{ t('booking.loadingAvailability') }}</p>
-          <div v-else-if="availabilityError" class="mt-4 border-l-2 border-red-600 bg-red-50 p-4 sm:p-5" role="alert">
-            <p class="label-kicker mb-1 text-xs text-red-700">{{ t('booking.availabilityErrorTitle') }}</p>
-            <p class="text-sm leading-relaxed text-red-900/80">{{ t('booking.availabilityError') }}</p>
-          </div>
-
-        <div class="mt-8 grid gap-5 sm:grid-cols-2">
+        <p class="mb-6 text-sm text-ink/70">{{ t('booking.guestsLead') }}</p>
+        <div class="grid gap-5 sm:grid-cols-2">
           <div v-for="g in [
             { f: 'adults' as const, label: t('booking.adults'), hint: '' },
             { f: 'children' as const, label: t('booking.children'), hint: t('booking.childrenHint') },
@@ -224,13 +211,98 @@ const inputBox =
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- 02 Room -->
+      <section>
+        <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
+          <span>02</span><span class="text-ink">{{ t('booking.stepRoom') }}</span>
+        </p>
+
+        <div v-if="!fitting.length" class="border-l-2 border-brand bg-cream p-5 sm:p-6" role="status">
+          <p class="label-kicker mb-1 text-xs text-brand">{{ t('booking.noFitTitle') }}</p>
+          <p class="leading-relaxed text-ink/80">{{ t('booking.noFitBody', { n: guestCount }) }}</p>
+          <RouterLink :to="pathForKey('contact-us', locale) || '#'" class="mt-3 inline-block text-sm font-semibold text-brand underline-offset-2 hover:underline">
+            {{ t('booking.noFitLink') }} &rarr;
+          </RouterLink>
+        </div>
+
+        <template v-else>
+          <p class="label-kicker mb-3 text-xs text-ink/60">{{ t('booking.pickCategory') }}</p>
+          <fieldset>
+            <legend class="sr-only">{{ t('booking.pickCategory') }}</legend>
+            <div class="grid gap-3 sm:grid-cols-3">
+              <label
+                v-for="r in fitting"
+                :key="r.id"
+                class="flex cursor-pointer items-start gap-3 border bg-white px-4 py-3 transition-colors hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand/5"
+                :class="form.room === r.id ? 'border-brand' : 'border-ink/20'"
+              >
+                <input v-model="form.room" type="radio" name="room" :value="r.id" class="mt-1 cursor-pointer accent-[#c9a15b]" />
+                <span class="flex-1">
+                  <span class="block text-sm font-semibold">{{ t(r.labelKey) }}</span>
+                  <span class="mt-0.5 block text-xs text-ink/60">
+                    {{ r.extraChild ? t('booking.sleepsExtra', { n: r.sleeps, age: EXTRA_CHILD_MAX_AGE }) : t('booking.sleeps', { n: r.sleeps }) }}
+                    &middot; {{ t('booking.roomsCount', { n: r.rooms.length }) }}
+                  </span>
+                  <RouterLink
+                    v-if="pathForKey(r.pageKey, locale)"
+                    :to="pathForKey(r.pageKey, locale)!"
+                    target="_blank"
+                    class="mt-2 inline-block rounded-sm bg-brand/15 px-3 py-1.5 text-xs font-semibold text-ink transition-colors hover:bg-brand/30"
+                    @click.stop
+                  >{{ t('booking.viewRoom') }} &rarr;</RouterLink>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+          <p v-if="errors.room" class="mt-2 text-xs text-red-600" role="alert">{{ errors.room }}</p>
+
+          <div v-if="category" class="mt-8">
+            <p class="label-kicker mb-3 text-xs text-ink/60">{{ t('booking.pickRoom') }}</p>
+            <fieldset>
+              <legend class="sr-only">{{ t('booking.pickRoom') }}</legend>
+              <div class="grid gap-3 sm:grid-cols-3">
+                <label
+                  v-for="u in category.rooms"
+                  :key="u.id"
+                  class="flex cursor-pointer items-start gap-3 border bg-white px-4 py-3 transition-colors hover:border-brand has-[:checked]:border-brand has-[:checked]:bg-brand/5"
+                  :class="form.unit === u.id ? 'border-brand' : 'border-ink/20'"
+                >
+                  <input v-model="form.unit" type="radio" name="unit" :value="u.id" class="mt-1 cursor-pointer accent-[#c9a15b]" />
+                  <span class="flex-1">
+                    <span class="block text-sm font-semibold">{{ pick(u.label) }}</span>
+                    <span class="mt-0.5 block text-xs text-ink/60">{{ pick(u.beds) }}</span>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+            <p v-if="category.extraChild" class="mt-3 text-xs text-ink/60">{{ t('booking.couchChildNote', { age: EXTRA_CHILD_MAX_AGE }) }}</p>
+            <p v-if="errors.unit" class="mt-2 text-xs text-red-600" role="alert">{{ errors.unit }}</p>
+          </div>
+        </template>
+      </section>
+
+      <!-- 03 Dates -->
+      <section>
+        <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
+          <span>03</span><span class="text-ink">{{ t('booking.stepStay') }}</span>
+        </p>
+        <p v-if="!hasUnit" class="mb-4 text-sm text-ink/60">{{ t('booking.selectRoomFirst') }}</p>
+        <div :class="hasUnit ? '' : 'pointer-events-none select-none opacity-40'" :inert="!hasUnit" :aria-busy="loading">
+          <DateRangePicker v-model:from="form.from" v-model:to="form.to" :booked="booked" :loading="loading" :error="errors.dates" />
+          <p v-if="loading" class="mt-2 text-xs text-ink/60" aria-live="polite">{{ t('booking.loadingAvailability') }}</p>
+          <div v-else-if="availabilityError" class="mt-4 border-l-2 border-red-600 bg-red-50 p-4 sm:p-5" role="alert">
+            <p class="label-kicker mb-1 text-xs text-red-700">{{ t('booking.availabilityErrorTitle') }}</p>
+            <p class="text-sm leading-relaxed text-red-900/80">{{ t('booking.availabilityError') }}</p>
+          </div>
         </div>
       </section>
 
-      <!-- 02 Details -->
+      <!-- 04 Details -->
       <section>
         <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
-          <span>03</span><span class="text-ink">{{ t('booking.stepDetails') }}</span>
+          <span>04</span><span class="text-ink">{{ t('booking.stepDetails') }}</span>
         </p>
         <div class="grid gap-5 sm:grid-cols-2">
           <BaseInput id="b-name" v-model="form.name" :label="t('booking.name')" :error="errors.name" required />
@@ -257,10 +329,10 @@ const inputBox =
         </label>
       </section>
 
-      <!-- 03 Send -->
+      <!-- 05 Send -->
       <section>
         <p class="label-kicker mb-6 flex items-baseline gap-5 text-brand">
-          <span>04</span><span class="text-ink">{{ t('booking.stepSend') }}</span>
+          <span>05</span><span class="text-ink">{{ t('booking.stepSend') }}</span>
         </p>
         <div class="border-l-2 border-brand bg-cream p-5 sm:p-6">
           <p class="label-kicker mb-2 text-xs text-brand">{{ t('booking.noticeTitle') }}</p>

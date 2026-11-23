@@ -2,7 +2,7 @@
 // One themed amenity group: line icon, title and a list with gold dashes.
 import type { AmenityIcon } from '@/site/room-pages'
 
-defineProps<{ icon: AmenityIcon; title: string; items: string[]; index: number }>()
+defineProps<{ icon: AmenityIcon; title: string; items: string[]; index: number; note?: string }>()
 
 const PATHS: Record<AmenityIcon, string> = {
   bed: 'M3 18V7m0 7h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5M7 11.5h.01',
@@ -31,5 +31,6 @@ const PATHS: Record<AmenityIcon, string> = {
         <span>{{ item }}</span>
       </li>
     </ul>
+    <p v-if="note" class="mt-4 text-xs leading-snug text-ink/60">{{ note }}</p>
   </div>
 </template>

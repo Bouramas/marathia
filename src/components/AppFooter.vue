@@ -12,7 +12,7 @@ const MAPS_URL = 'https://maps.app.goo.gl/cdfBHxouMkrSds4M6'
 
 <template>
   <footer
-    class="relative mt-24 overflow-hidden bg-gradient-to-b from-[#eaeaea] to-white shadow-[0_-10px_28px_-16px_rgba(0,0,0,0.08)]"
+    class="relative overflow-hidden bg-gradient-to-b from-[#eaeaea] to-white shadow-[0_-10px_28px_-16px_rgba(0,0,0,0.08)]"
   >
     <!-- depth: top highlight + soft watermark monogram -->
     <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/40" aria-hidden="true"></div>

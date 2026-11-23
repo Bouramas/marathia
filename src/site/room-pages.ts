@@ -11,6 +11,7 @@ export type AmenityIcon = 'bed' | 'cup' | 'leaf' | 'bell'
 export interface AmenityGroupData {
   icon: AmenityIcon
   title: Localized
+  note?: Localized
   items: Localized[]
 }
 
@@ -48,7 +49,13 @@ export const roomUi = {
   amenitiesKicker: L('Παροχές', 'Amenities'),
   amenitiesTitle: L('Όλα όσα χρειάζεστε', 'Everything you need'),
   signatureKicker: L('Το δωμάτιο ξεχωρίζει για', 'What sets this room apart'),
-  linenNote: L('* Τα σεντόνια & οι πετσέτες είναι από 100% βαμβάκι', '* Bed linens & towels are 100% cotton'),
+  roomsKicker: L('Τα δωμάτια', 'The rooms'),
+  roomsTitle: L('Επιλέξτε το δικό σας', 'Choose yours'),
+  bookThis: L('Κράτηση', 'Book'),
+  couchNote: L(
+    'Ο καναπές μετατρέπεται σε κρεβάτι για ένα παιδί έως 10 ετών.',
+    'The couch turns into a bed for one child up to 10 years old.',
+  ),
   othersKicker: L('Ανακαλύψτε και', 'Also at Marathia'),
   othersTitle: L('Τα υπόλοιπα δωμάτια', 'Other rooms'),
   view: L('Δείτε το δωμάτιο', 'View room'),
@@ -60,7 +67,7 @@ export const roomUi = {
   ctaBook: L('Κράτηση', 'Book now'),
   ctaContact: L('Επικοινωνία', 'Contact us'),
   factSize: L('Εμβαδόν', 'Size'),
-  factBeds: L('Κρεβάτια', 'Beds'),
+  factSleeps: L('Φιλοξενεί', 'Sleeps'),
   factSetting: L('Χώρος', 'Setting'),
 }
 
@@ -80,7 +87,7 @@ export const sharedAmenities = {
   kitchen: {
     icon: 'cup' as const,
     title: L('Καφές & κουζίνα', 'Coffee & kitchen'),
-    items: [L('Ψυγείο', 'Refrigerator'), L('Βραστήρας, καφετιέρα, κουζινικά', 'Kettle, coffee maker, kitchenware')],
+    items: [L('Ψυγείο', 'Refrigerator'), L('Βραστήρας', 'Kettle'), L('Καφετιέρα', 'Coffee maker'), L('Κουζινικά', 'Kitchenware')],
   },
   bath: {
     icon: 'leaf' as const,
@@ -91,17 +98,19 @@ export const sharedAmenities = {
       L('Καλάθι με amenities', 'Basket with amenities'),
       L('Παντόφλες μιας χρήσης', 'Disposable slippers'),
       L('Πετσέτες παραλίας', 'Beach towels'),
+      L('Σεντόνια & πετσέτες από 100% βαμβάκι', 'Bed linens & towels are 100% cotton'),
     ],
   },
   services: {
     icon: 'bell' as const,
     title: L('Υπηρεσίες', 'Services'),
+    note: L('* Κατόπιν συνεννόησης. Το transfer από το λιμάνι χρεώνεται επιπλέον.', '* Upon request. Port transfer is charged additionally.'),
     items: [
       L('Καθημερινή υπηρεσία καθαρισμού', 'Daily cleaning service'),
-      L('Laundry (κατόπιν συνεννόησης)', 'Laundry service (upon request)'),
-      L('Πρωινό στο δωμάτιο (κατόπιν συνεννόησης)', 'Breakfast served in the room (upon request)'),
+      L('Laundry *', 'Laundry service *'),
+      L('Πρωινό στο δωμάτιο *', 'Breakfast served in the room *'),
       L('Room Service από το εστιατόριο μας (12.30 - 20.00)', 'Room service from our restaurant (12:30 – 20:00)'),
-      L('Transfer από το λιμάνι, κατόπιν συνεννόησης (με ανάλογη χρέωση)', 'Transfer to and from the port (upon request, with additional charge)'),
+      L('Transfer από το λιμάνι *', 'Transfer to and from the port *'),
     ],
   },
 }
@@ -112,7 +121,7 @@ export const roomPages: Record<string, RoomPage> = {
     hero: `${G}/standard/standard_room.jpg`,
     facts: [
       { label: roomUi.factSize, value: L('22-24 τ.μ.', '22-24 sqm') },
-      { label: roomUi.factBeds, value: L('Queen ή 2 μονά', 'Queen or 2 singles') },
+      { label: roomUi.factSleeps, value: L('2 άτομα', '2 guests') },
       { label: roomUi.factSetting, value: L('Αυλή με βότανα', 'Herb courtyard') },
     ],
     intro: L(
@@ -136,7 +145,7 @@ export const roomPages: Record<string, RoomPage> = {
     hero: `${G}/superior/superior_room.jpg`,
     facts: [
       { label: roomUi.factSize, value: L('30 τ.μ.', '30 sqm') },
-      { label: roomUi.factBeds, value: L('Queen + σαλονάκι', 'Queen + living area') },
+      { label: roomUi.factSleeps, value: L('2 + 1 παιδί έως 10 ετών', '2 + 1 child up to 10') },
       { label: roomUi.factSetting, value: L('Όροφος, θέα στη θάλασσα', 'Upper floor, sea view') },
     ],
     intro: L(
@@ -160,7 +169,7 @@ export const roomPages: Record<string, RoomPage> = {
     hero: `${G}/junior/junior_suites.jpg`,
     facts: [
       { label: roomUi.factSize, value: L('40-42 τ.μ.', '40-42 sqm') },
-      { label: roomUi.factBeds, value: L('Queen + 2 μονά ή καναπές-κρεβάτι', 'Queen + 2 singles or sofa bed') },
+      { label: roomUi.factSleeps, value: L('4 άτομα', '4 guests') },
       { label: roomUi.factSetting, value: L('Βεράντα ή αυλή', 'Veranda or courtyard') },
     ],
     intro: L(

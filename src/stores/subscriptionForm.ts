@@ -20,6 +20,8 @@ export interface BookingPayload {
   adults: number
   children: number
   room: string
+  /** Id of the chosen physical room (see src/site/rooms.ts). */
+  unit: string
   name: string
   email: string
   phone: string

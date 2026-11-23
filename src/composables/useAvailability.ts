@@ -1,8 +1,7 @@
-// Booked nights for a room category, read from the Google Calendars of its rooms (see Bookings.md).
-// A night is booked for the category only when EVERY room in it is booked that night.
-// Nothing is fetched until a category is selected.
+// Booked nights of ONE room, read from that room's Google Calendar (see Bookings.md).
+// Nothing is fetched until a room is selected.
 import { ref, watch, type Ref } from 'vue'
-import { calendarsFor, type CategoryId } from '@/site/rooms'
+import { unitById } from '@/site/rooms'
 
 const API_KEY = import.meta.env.VITE_GCAL_API_KEY as string | undefined
 
@@ -53,56 +52,45 @@ async function fetchRoomNights(calendarId: string, monthsAhead: number): Promise
   return eventsToNights(data.items ?? [])
 }
 
-/** Nights present in every set. */
-function intersect(sets: Set<string>[]): Set<string> {
-  if (!sets.length) return new Set()
-  return new Set([...sets[0]].filter((n) => sets.every((s) => s.has(n))))
-}
-
-export function useAvailability(category: Ref<CategoryId | ''>, monthsAhead = 18) {
+export function useAvailability(roomId: Ref<string>, monthsAhead = 18) {
   const booked = ref<Set<string>>(new Set())
   const loading = ref(false)
   const error = ref(false)
-  const cache = new Map<CategoryId, { booked: Set<string>; error: boolean }>()
+  const cache = new Map<string, Set<string>>()
   let token = 0
 
-  async function load(cat: CategoryId | '') {
+  async function load(id: string) {
     const mine = ++token
     error.value = false
-    if (!cat) {
+    const calendarId = id ? unitById(id)?.unit.calendar : undefined
+    if (!id || !calendarId || !API_KEY) {
+      if (id) console.info('[availability] API key or calendar ID not set for', id, '; no dates blocked')
       booked.value = new Set()
       loading.value = false
       return
     }
-    const hit = cache.get(cat)
+    const hit = cache.get(id)
     if (hit) {
-      booked.value = hit.booked
-      error.value = hit.error
-      loading.value = false
-      return
-    }
-    const ids = calendarsFor(cat)
-    if (!API_KEY || !ids.length) {
-      console.info('[availability] API key or calendar IDs not set for', cat, '; no dates blocked')
-      booked.value = new Set()
+      booked.value = hit
       loading.value = false
       return
     }
     loading.value = true
     booked.value = new Set()
-    const results = await Promise.allSettled(ids.map((id) => fetchRoomNights(id, monthsAhead)))
-    if (mine !== token) return // category changed meanwhile
-    const failed = results.some((r) => r.status === 'rejected')
-    // A room that failed to load counts as free, so dates are never blocked wrongly.
-    const sets = results.map((r) => (r.status === 'fulfilled' ? r.value : new Set<string>()))
-    const merged = intersect(sets)
-    if (failed) console.warn('[availability] some calendars failed to load', results)
-    if (!failed) cache.set(cat, { booked: merged, error: false })
-    booked.value = merged
-    error.value = failed
+    try {
+      const nights = await fetchRoomNights(calendarId, monthsAhead)
+      if (mine !== token) return // room changed meanwhile
+      cache.set(id, nights)
+      booked.value = nights
+    } catch (e) {
+      if (mine !== token) return
+      // A room that failed to load counts as free, so dates are never blocked wrongly.
+      console.warn('[availability] calendar failed to load', e)
+      error.value = true
+    }
     loading.value = false
   }
 
-  watch(category, load, { immediate: true })
+  watch(roomId, load, { immediate: true })
   return { booked, loading, error }
 }

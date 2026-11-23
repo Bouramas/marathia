@@ -10,6 +10,7 @@ import { useLocale } from '@/composables/useLocale'
 import { useSeo } from '@/composables/useSeo'
 import { roomPages, roomUi, sharedAmenities } from '@/site/room-pages'
 import { suites } from '@/site/suites-page'
+import { ROOM_CATEGORIES } from '@/site/rooms'
 import BaseButton from '@/components/BaseButton.vue'
 import DotSeparator from '@/components/DotSeparator.vue'
 import RoomGallery from '@/components/RoomGallery.vue'
@@ -24,6 +25,7 @@ const page = computed(() => pageByKey(key.value))
 const room = computed(() => roomPages[key.value])
 const info = computed(() => suites.rooms.find((r) => r.key === key.value))
 const name = computed(() => (info.value ? pick(info.value.name) : page.value ? pick(page.value.title) : ''))
+const category = computed(() => ROOM_CATEGORIES.find((c) => c.pageKey === key.value))
 const others = computed(() => suites.rooms.filter((r) => r.key !== key.value))
 
 const groups = computed(() => {
@@ -33,8 +35,8 @@ const groups = computed(() => {
     { icon: s.comfort.icon, title: s.comfort.title, items: [...r.beds, ...s.comfort.items] },
     { icon: s.kitchen.icon, title: s.kitchen.title, items: [...r.kitchen, ...s.kitchen.items] },
     { icon: s.bath.icon, title: s.bath.title, items: s.bath.items },
-    { icon: s.services.icon, title: s.services.title, items: s.services.items },
-  ].map((g) => ({ icon: g.icon, title: pick(g.title), items: g.items.map((i) => pick(i)) }))
+    { icon: s.services.icon, title: s.services.title, items: s.services.items, note: s.services.note },
+  ].map((g) => ({ icon: g.icon, title: pick(g.title), items: g.items.map((i) => pick(i)), note: g.note && pick(g.note) }))
 })
 
 const gallery = computed(() => room.value.gallery.map((g) => ({ src: g.src, alt: pick(g.alt) })))
@@ -118,6 +120,29 @@ useSeo(() => {
       </div>
     </section>
 
+    <!-- Rooms & beds -->
+    <section v-if="category" class="pb-14 lg:pb-20">
+      <div class="mx-auto max-w-4xl px-6 lg:px-10">
+        <div class="mb-6 text-center">
+          <p class="label-kicker mb-2 text-brand">{{ pick(roomUi.roomsKicker) }} &middot; {{ pick(info!.count) }}</p>
+          <h2 class="display text-xl tracking-[0.1em] sm:text-2xl sm:tracking-[0.14em]">{{ pick(roomUi.roomsTitle) }}</h2>
+        </div>
+        <ul class="divide-y divide-ink/10 border-y border-ink/15 bg-cream">
+          <li v-for="u in category.rooms" :key="u.id" class="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
+            <div class="min-w-0">
+              <p class="text-sm font-semibold tracking-wide">{{ pick(u.label) }}</p>
+              <p class="text-xs leading-snug text-ink/70 sm:text-sm">{{ pick(u.beds) }}</p>
+            </div>
+            <RouterLink
+              :to="`${pathForKey('forma-kratisis-domatiou', locale) || '#'}?room=${u.id}`"
+              class="label-kicker shrink-0 border border-brand px-3 py-1.5 text-[0.7rem] text-black transition-colors hover:bg-brand/15"
+            >{{ pick(roomUi.bookThis) }}</RouterLink>
+          </li>
+        </ul>
+        <p v-if="category.extraChild" class="mt-4 text-center text-xs text-ink/70 sm:text-sm">{{ pick(roomUi.couchNote) }}</p>
+      </div>
+    </section>
+
     <!-- Amenities -->
     <section class="bg-cream py-14 lg:py-24">
       <div class="mx-auto max-w-6xl px-6 lg:px-10">
@@ -147,11 +172,11 @@ useSeo(() => {
             :icon="g.icon"
             :title="g.title"
             :items="g.items"
+            :note="g.note"
             :index="i"
             class="border-ink/15 not-first:border-t md:nth-2:border-t-0 md:odd:border-r"
           />
         </div>
-        <p class="mt-8 text-center text-sm text-ink/60">{{ pick(roomUi.linenNote) }}</p>
       </div>
     </section>
 

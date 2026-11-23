@@ -170,7 +170,7 @@ is a guesthouse booking *request* UI: custom range calendar `forms/DateRangePick
 `booking.*`. Submits via `submitForm` to Web3Forms (env `VITE_WEB3FORMS_KEY`; stub if unset); the notice says the host will contact the guest
 to confirm and arrange payment.
 
-**Availability:** guest picks a room category first; its rooms' public Google Calendars are then read live (`src/composables/useAvailability.ts`; mapping in `src/site/rooms.ts`; env `VITE_GCAL_API_KEY` + 8 `VITE_GCAL_ID_*`); a night is blocked only if all rooms of the category are booked. **Minimum stay** (`src/site/stay-rules.ts`): Jul–Aug 3 nights; Jun/Sep 1 night Mon–Thu check-in, 2 nights Fri–Sun; enforced in the picker and on submit. Setup and conventions in `Bookings.md`.
+**Availability:** flow is guests → categories that fit (`fitsCategory` in `src/site/rooms.ts`) → one specific room → dates. Only that room's public Google Calendar is read live (`src/composables/useAvailability.ts`; rooms, bed layouts and capacity in `src/site/rooms.ts`; env `VITE_GCAL_API_KEY` + 8 `VITE_GCAL_ID_*`). `/booking?room=<id>` preselects a room. **Minimum stay** (`src/site/stay-rules.ts`): Jul–Aug 3 nights; Jun/Sep 1 night Mon–Thu check-in, 2 nights Fri–Sun; enforced in the picker and on submit. Setup and conventions in `Bookings.md`.
 
 `src/stores/subscriptionForm.ts` → `submitForm(payload, endpoint?)`. With no
 `endpoint` it logs + simulates success (shows a success toast). `ReservationForm.vue`

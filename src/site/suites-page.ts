@@ -23,18 +23,20 @@ export const suites = {
   ),
   highlights: [
     { value: L('2016', '2016'), label: L('Πιστοποίηση Green Key', 'Green Key certified') },
+    { value: L('8', '8'), label: L('Δωμάτια και σουίτες', 'Rooms and suites') },
     { value: L('Πρωινό', 'Breakfast'), label: L('Μπουφέ με τοπικά υλικά', 'Buffet of local ingredients') },
     { value: L('1\'', '1\''), label: L('Περπάτημα μέχρι την παραλία', 'Walk to the beach') },
-    { value: L('Αυλές', 'Courtyards'), label: L('Βεράντες με βότανα', 'Verandas with herbs') },
   ],
   roomsKicker: L('Τα δωμάτιά μας', 'Our rooms'),
   roomsTitle: L('Επιλέξτε το δικό σας', 'Find your place'),
-  view: L('Δείτε το δωμάτιο', 'View room'),
+  view: L('Δείτε τα δωμάτια', 'View rooms'),
   rooms: [
     {
       key: 'souites-kai-domatia/diklina',
       name: L('Standard Δίκλινα', 'Standard Doubles'),
       size: L('22-24 τ.μ.', '22-24 sqm'),
+      sleeps: L('Φιλοξενεί 2', 'Sleeps 2'),
+      count: L('3 δωμάτια', '3 rooms'),
       image: '/assets/pictures/guesthouse/standard/standard_room.jpg',
       body: L(
         'Studios στη δροσερή και επιπλωμένη αυλή μας, με Queen size κρεβάτι, ή δύο μονά. Είναι εξοπλισμένα και ωραία διακοσμημένα σε γήινα χρώματα.',
@@ -46,6 +48,8 @@ export const suites = {
       key: 'souites-kai-domatia/superior-diklina-orofou',
       name: L('Superior Δίκλινα', 'Superior Doubles'),
       size: L('30 τ.μ.', '30 sqm'),
+      sleeps: L('Φιλοξενεί 2 + 1 παιδί', 'Sleeps 2 + 1 child'),
+      count: L('2 δωμάτια', '2 rooms'),
       image: '/assets/pictures/guesthouse/superior/superior_room.jpg',
       body: L(
         'Ιδανικά για οικογένειες με ένα παιδί, αποτελούν ενιαίο χώρο, είναι εξοπλισμένα, άνετα και καλαίσθητα. Διαθέτουν Queen size κρεβάτι και σαλονάκι.',
@@ -57,6 +61,8 @@ export const suites = {
       key: 'souites-kai-domatia/junior-suites',
       name: L('Junior Suites', 'Junior Suites'),
       size: L('40-42 τ.μ.', '40-42 sqm'),
+      sleeps: L('Φιλοξενεί 4', 'Sleeps 4'),
+      count: L('3 σουίτες', '3 suites'),
       image: '/assets/pictures/guesthouse/junior/junior_suites.jpg',
       body: L(
         'Τα δίχωρα αυτά διαμερίσματα βρίσκονται στον όροφο ή στη δροσερή αυλή μας. Είναι ευρύχωρα, διαθέτουν Queen size κρεβάτι και δύο μονά, ή καναπέ-κρεβάτι. Μπορούν να φιλοξενήσουν οικογένειες και παρέες.',

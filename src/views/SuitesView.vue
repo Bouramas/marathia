@@ -109,6 +109,8 @@ useSeo(() => {
             <span class="my-6 block h-px w-14 bg-brand/60"></span>
             <p class="leading-relaxed text-ink/80">{{ pick(r.body) }}</p>
             <ul class="mt-5 flex flex-wrap gap-2">
+              <li class="label-kicker rounded-full bg-brand/15 px-3 py-1 text-ink">{{ pick(r.sleeps) }}</li>
+              <li class="label-kicker rounded-full bg-brand/15 px-3 py-1 text-ink">{{ pick(r.count) }}</li>
               <li v-for="tag in pick(r.tags)" :key="tag" class="label-kicker rounded-full border border-brand/50 px-3 py-1 text-ink/70">{{ tag }}</li>
             </ul>
             <div class="mt-8">
