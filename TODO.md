@@ -42,26 +42,16 @@ CLEANUP
 Check the backup folder
 Check the scripts folder and delete whatever is not required.
 
-Fix Social media links
 
 Mobile view fixes:
-main pages - awards section, the images should rotate constantly is a slow speed so all of them become visible at some point. Currently the last 2 are hidden unless you scroll.
+main pages - awards section, the images are rotating constantly in a slow speed, but the user might need to manually scroll them faster, also in my mobile i see it starts from a half cut image in the middle and then it scrolls slowly. I want a continuous repetetive loop. 
 
 
 
 TODO
-Create Marinos Souranis signature email
-
 Setup SEO tracking - after site goes live
-
-Create a README.md for the projecting explaining what is going on
-
 Make sure not too many requests towards google api are made. Is this a problem ? Can we do something about caching? maybe cache for each session?
 Create WEB3FORM account link with form in website.
-Fix Room reservation form - choose specific room
-
-TRANSFER EMAIL FROM PERSONAL TO 
-WHERE IS THE DOMAIN REGISTERED ? OEO ? 
 
 MAKE GOOGLE CLOUD API KEY RESTRAINED TO DOMAIN CALLS ONLY
 
