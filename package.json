@@ -9,7 +9,7 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "vue-tsc -b --noEmit",
-    "deploy": "npm run build && aws s3 sync dist/ s3://marathiatinos.gr --delete"
+    "deploy": "npm run build && aws s3 sync dist/ s3://www.marathiatinos.gr --delete"
   },
   "dependencies": {
     "@fontsource/karla": "^5.1.0",
