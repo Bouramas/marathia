@@ -64,3 +64,7 @@ Fix the transitions from page to page
 Ενεργοποίηση Google Analytics (στατιστικά επισκεψιμότητας): Δημιουργία λογαριασμού Google Analytics με τον νέο εταιρικό λογαριασμό Google και σύνδεσή του τόσο με το marathiatinos.gr όσο και με το thefishdryagingschool.com, ώστε να παρακολουθείτε πόσοι επισκέπτες μπαίνουν κάθε μήνα στις δύο ιστοσελίδες.
 
 Ακύρωση παλιού hosting: Αφού επιβεβαιωθεί ότι email, νέα ιστοσελίδα και στατιστικά λειτουργούν κανονικά, ακύρωση μόνο του πακέτου φιλοξενίας (cPanel/WordPress) στο iphost.net, διατηρώντας ενεργή την ανανέωση του domain marathiatinos.gr.
+
+
+In ROUTE 53 change to p=reject after 2 days? why ? google it
+_dmarc -> "v=DMARC1; p=quarantine; adkim=r; aspf=r; pct=100"

@@ -5,7 +5,7 @@ marathiatinos.gr. | 14400 | A | 93.174.123.218
 mail.marathiatinos.gr. | 14400 | CNAME | marathiatinos.gr
 www.marathiatinos.gr. | 14400 | CNAME | marathiatinos.gr
 ftp.marathiatinos.gr. | 14400 | A | 93.174.123.218
-marathiatinos.gr. | 300 | TXT | v=spf1 ip4:93.174.125.10 +a +mx +ip4:93.174.123.218 ~all
+
 cpcalendars.marathiatinos.gr. | 14400 | A | 93.174.123.218
 webdisk.marathiatinos.gr. | 14400 | A | 93.174.123.218
 cpanel.marathiatinos.gr. | 14400 | A | 93.174.123.218
@@ -18,7 +18,7 @@ _acme-challenge.marathiatinos.gr. | 14400 | TXT | V3lYDISeEDt50_XcKNWZQFkBUqi0d7
 neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
 www.neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
 default._domainkey.neo.marathiatinos.gr. | 14400 | TXT | v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuQwomChW4T0ZcVCOmxwI97fwXWtc8vTn+6DscKKcSWkvIptMpqNTOqAa/dnbkRWURRk4v5QhNkm3sHmcnUfu09MYLIWPTL3hVJCcJM5NnhNNteDuiqmXX5TrCuEq9cKtma1JKILdPFg2kzJgSW4eOJ0i8k2mWCFquNfE+TIqa1PVV9cZ/Px4nyryvP9UQSRvEyVk3ZIOIjA9Jm27oNrtzLaEsCYisR4O+EgSuWr4462gzTFXGQyVx5HGc/3lDbuQko3mKXlkzi0I2m8MSxuIo0ujoNUdmG/lonDe+9Me3krk/KRLGXBfLHw3ZOMjtKABYtQIBDJBin2VwnsBotSpAwIDAQAB;
-neo.marathiatinos.gr. | 14400 | TXT | v=spf1 ip4:93.174.125.10 +a +mx +ip4:93.174.123.218 ~all
+
 cpcalendars.neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
 webdisk.neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
 cpcontacts.neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
@@ -26,7 +26,7 @@ webmail.neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
 whm.neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
 cpanel.neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
 marathiatinos.gr. | 300 | TXT | google-site-verification=lUR9z-vIek1BkL3WZt9xNEnIvACQHwU-VGKdXMeOWn8
-_dmarc.marathiatinos.gr. | 14400 | TXT | v=DMARC1;p=reject;sp=reject;adkim=s;aspf=s;pct=100;fo=1;rf=afrf;ri=86400;rua=mailto:mcnick111@hotmail.com
+
 autodiscover.neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
 autoconfig.neo.marathiatinos.gr. | 14400 | A | 93.174.123.218
 _autodiscover._tcp.neo.marathiatinos.gr. | 14400 | SRV | 0 0 443 cpanelemaildiscovery.cpanel.net
@@ -49,8 +49,16 @@ _carddav._tcp.neo.marathiatinos.gr. | 14400 | SRV | 0 0 2079 neo.marathiatinos.g
 _carddav._tcp.neo.marathiatinos.gr. | 14400 | TXT | path=/
 _carddavs._tcp.marathiatinos.gr. | 14400 | SRV | 0 0 2080 marathiatinos.gr
 _carddavs._tcp.marathiatinos.gr. | 14400 | TXT | path=/
+neo.marathiatinos.gr. | 14400 | TXT | v=spf1 ip4:93.174.125.10 +a +mx +ip4:93.174.123.218 ~all
 _dmarc.neo.marathiatinos.gr. | 14400 | TXT | v=DMARC1; p=none;
 marathiatinos.gr. | 300 | TXT | google-site-verification=qiOu4JTUMFw2eBc-QAogbH4_lqy9rOvkH_MLacl7f38
+
+
+
+
+
+marathiatinos.gr. | 300 | TXT | v=spf1 ip4:93.174.125.10 +a +mx +ip4:93.174.123.218 ~all
+_dmarc.marathiatinos.gr. | 14400 | TXT | v=DMARC1;p=reject;sp=reject;adkim=s;aspf=s;pct=100;fo=1;rf=afrf;ri=86400;rua=mailto:mcnick111@hotmail.com
+marathiatinos.gr. | 300 | TXT | v=spf1 include:_spf.google.com ~all
 marathiatinos.gr. | 300 | MX | 1 SMTP.GOOGLE.COM
 google._domainkey.marathiatinos.gr. | 300 | TXT | v=DKIM1;k=rsa;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuz8t1YN77IFwRsDq1bhL6NNiuvGEk30RPlp37Rq6Hq0vmHU22gdADgKCRl4keODEX7U4h0KFeNpfDDYpgrDX6xy9m+8m7zb/mxBkjampTX+S/mTwAwz8RZPVVX/Sumsy4ZG+BBejg2URcLDf65nvqvVUtdGLR9zbvnnT6zIeIkPNZl8G6F4vh7G1dJZsXqq1vAWfvoQuuDjgGaLaRSKNJRnDobPPoyXZIxcsFZQYVNkmXInOTTYbRZ4mLVpoPyvi+vRb7m6hSi+egDQVrQosATz5hiC9BSHebfGTBcz1eOy4RM0DSd/DB/fk4/bMfNWGPFBtMaoHTSNzA2MfWK95JQIDAQAB
-marathiatinos.gr. | 300 | TXT | v=spf1 include:_spf.google.com ~all
