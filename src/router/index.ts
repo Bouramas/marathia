@@ -108,6 +108,9 @@ for (const page of [home, ...pages]) {
     addRedirect(localePath(page.slug.en, 'el'), enTarget)
   }
 }
+// Deleted page: /apartments (and its old WP slug) now lands on the suites overview.
+for (const from of ['/apartments', '/ta-diamerismata-mas']) addRedirect(from, '/suites')
+for (const from of ['/en/apartments', '/en/ta-diamerismata-mas']) addRedirect(from, '/en/suites')
 for (const [from, to] of redirects) {
   routes.push({ path: from, redirect: to })
 }

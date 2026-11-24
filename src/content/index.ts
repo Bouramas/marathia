@@ -14,7 +14,6 @@ import _i_tinos_istorika_stoicheia from './pages/i-tinos-istorika-stoicheia'
 import _i_tinos_me_mia_matia from './pages/i-tinos-me-mia-matia'
 import _i_tinos_mi_chasete from './pages/i-tinos-mi-chasete'
 import _i_tinos_paralies from './pages/i-tinos-paralies'
-import _i_tinos_politismos from './pages/i-tinos-politismos'
 import _orimansi_psarion from './pages/orimansi-psarion'
 import _seminaria_gastrotourismou from './pages/seminaria-gastrotourismou'
 import _souites_kai_domatia from './pages/souites-kai-domatia'
@@ -22,7 +21,6 @@ import _souites_kai_domatia_diklina from './pages/souites-kai-domatia-diklina'
 import _souites_kai_domatia_junior_suites from './pages/souites-kai-domatia-junior-suites'
 import _souites_kai_domatia_superior_diklina_orofou from './pages/souites-kai-domatia-superior-diklina-orofou'
 import _symvouleftiki from './pages/symvouleftiki'
-import _ta_diamerismata_mas from './pages/ta-diamerismata-mas'
 export { default as menu } from './menu'
 export { default as testimonials } from './testimonials'
 export { default as nav } from './nav'
@@ -43,7 +41,6 @@ export const pages: PageContent[] = [
   _i_tinos_me_mia_matia,
   _i_tinos_mi_chasete,
   _i_tinos_paralies,
-  _i_tinos_politismos,
   _orimansi_psarion,
   _seminaria_gastrotourismou,
   _souites_kai_domatia,
@@ -51,7 +48,6 @@ export const pages: PageContent[] = [
   _souites_kai_domatia_junior_suites,
   _souites_kai_domatia_superior_diklina_orofou,
   _symvouleftiki,
-  _ta_diamerismata_mas,
 ]
 
 

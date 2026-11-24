@@ -1,7 +1,6 @@
 [
   "/",
   "/about",
-  "/apartments",
   "/attractions",
   "/beaches",
   "/booking",
@@ -9,7 +8,6 @@
   "/contact",
   "/en",
   "/en/about",
-  "/en/apartments",
   "/en/attractions",
   "/en/beaches",
   "/en/booking",
@@ -26,7 +24,6 @@
   "/en/suites/superior",
   "/en/tinos",
   "/en/tinos/activities",
-  "/en/tinos/culture",
   "/en/tinos/discoveries",
   "/en/tinos/history",
   "/en/workshops",
@@ -41,7 +38,6 @@
   "/suites/superior",
   "/tinos",
   "/tinos/activities",
-  "/tinos/culture",
   "/tinos/discoveries",
   "/tinos/history",
   "/workshops"
