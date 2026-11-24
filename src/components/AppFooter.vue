@@ -2,8 +2,11 @@
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { socials } from '@/site/socials'
+import { pathForKey } from '@/composables/usePages'
+import { useUiStore } from '@/stores/ui'
 
 const { t } = useI18n()
+const ui = useUiStore()
 const year = new Date().getFullYear()
 
 const MAPS_URL = 'https://maps.app.goo.gl/cdfBHxouMkrSds4M6'
@@ -93,6 +96,12 @@ const MAPS_URL = 'https://maps.app.goo.gl/cdfBHxouMkrSds4M6'
                 </a>
               </li>
             </ul>
+            <RouterLink
+              :to="pathForKey('privacy-policy', ui.locale) ?? '/'"
+              class="text-xs text-ink/50 underline-offset-2 hover:text-ink/80 hover:underline"
+            >
+              {{ t('footer.privacy') }}
+            </RouterLink>
           </div>
       </div>
     </div>

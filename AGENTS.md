@@ -132,6 +132,7 @@ home ×1, ~23 pages, 9 menu dishes, 6 testimonials;
   don't edit it for nav changes.
 - `router.afterEach` sets a `robots` meta tag: `index,follow` default;
   `noindex,nofollow` for 404 and **unreviewed English pages** (`enReviewed:false`).
+- **Analytics:** Google Tag Manager `GTM-KVFMRB9C` is hard-coded in `index.html` (head + noscript), loaded immediately with no consent banner by decision. The privacy policy (`privacy-policy`, `src/content/pages/privacy-policy.ts`, footer link) discloses it; update it if tags/vendors change. Consider a consent banner for EU ePrivacy compliance.
 - `src/composables/useSeo.ts` sets title / description / canonical / hreflang (el+en)
   / Open Graph per view imperatively (origin = `https://marathiatinos.gr`).
 - `vite.config.ts` feeds `src/site/routes.json` to `vite-plugin-sitemap` → `dist/sitemap.xml`.

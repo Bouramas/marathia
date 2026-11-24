@@ -34,7 +34,7 @@ contact
 
 Substack - Maybe add a more obvious link somewhere.
 
-Generate a privacy policy and add a subtle link in the footer under the social media links.
+~~Generate a privacy policy and add a subtle link in the footer under the social media links.~~ DONE (draft; needs legal review).
 
 
 CLEANUP

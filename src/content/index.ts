@@ -15,6 +15,7 @@ import _i_tinos_me_mia_matia from './pages/i-tinos-me-mia-matia'
 import _i_tinos_mi_chasete from './pages/i-tinos-mi-chasete'
 import _i_tinos_paralies from './pages/i-tinos-paralies'
 import _orimansi_psarion from './pages/orimansi-psarion'
+import _privacy_policy from './pages/privacy-policy'
 import _seminaria_gastrotourismou from './pages/seminaria-gastrotourismou'
 import _souites_kai_domatia from './pages/souites-kai-domatia'
 import _souites_kai_domatia_diklina from './pages/souites-kai-domatia-diklina'
@@ -42,6 +43,7 @@ export const pages: PageContent[] = [
   _i_tinos_mi_chasete,
   _i_tinos_paralies,
   _orimansi_psarion,
+  _privacy_policy,
   _seminaria_gastrotourismou,
   _souites_kai_domatia,
   _souites_kai_domatia_diklina,

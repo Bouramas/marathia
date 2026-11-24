@@ -36,6 +36,7 @@ const messages = {
       openMaps: 'Άνοιγμα στο Google Maps',
       quickLinks: 'Εξερευνήστε',
       madeIn: 'Τήνος, Κυκλάδες, Ελλάδα',
+      privacy: 'Πολιτική απορρήτου',
     },
     home: {
       reserve: 'Κράτηση',
@@ -226,6 +227,7 @@ const messages = {
       openMaps: 'Open in Google Maps',
       quickLinks: 'Explore',
       madeIn: 'Tinos, Cyclades, Greece',
+      privacy: 'Privacy policy',
     },
     home: {
       reserve: 'Reserve',
