@@ -62,6 +62,8 @@ useSeo(() => ({
       :links="band.links?.map((l) => ({ to: pathForKey(l.key, locale) || '#', label: pick(l.label) }))"
       :framed="band.framed"
       :arch="band.arch"
+      :image-position="band.imagePosition"
+      :image-aspect="band.imageAspect"
       :reverse="band.reverse"
       :tint="band.tint"
       :extra="band.extra && {

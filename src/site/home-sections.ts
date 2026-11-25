@@ -23,6 +23,8 @@ export interface HomeBand {
   framed?: boolean
   /** Arched top on the framed image. */
   arch?: boolean
+  imagePosition?: string
+  imageAspect?: string
   /** Image on the right (text on the left) from lg up. */
   reverse?: boolean
   /** Warm cream background band, for vertical rhythm. */
@@ -88,9 +90,11 @@ export const homeBands: HomeBand[] = [
       el: 'Ο ξενώνας της Μαραθιάς είναι οικογενειακή επιχείρηση. Μας χαρακτηρίζει η αυθεντική και ανεπιτήδευτη φιλοξενία, με σουίτες και δωμάτια σχεδιασμένα σε λιτή κυκλαδίτικη αρχιτεκτονική. Διαθέτει πιστοποίηση Green Key από το 2016.',
       en: 'Marathia Guesthouse is a family business, known for its authentic and unpretentious hospitality, with suites and rooms designed in simple Cycladic architecture. It has been Green Key certified since 2016.',
     },
-    image: '/assets/uploads/2024/12/rooms-in-800x451_DSC3501.jpg',
+    image: '/assets/pictures/guesthouse/standard/standard_room.jpg',
     framed: true,
     arch: true,
+    imagePosition: '70% center',
+    imageAspect: '1',
     ctaKey: 'forma-kratisis-domatiou',
     ctaLabel: { el: 'Κάντε κράτηση', en: 'Book now' },
     secondaryCta: { key: 'souites-kai-domatia', label: { el: 'Δείτε περισσότερα', en: 'See more' } },

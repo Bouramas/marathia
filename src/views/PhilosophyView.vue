@@ -94,6 +94,26 @@ useSeo(() => {
             <p class="text-base font-light leading-snug">{{ pick(p.text) }}</p>
           </div>
         </div>
+
+        <!-- Photo pair: the producers (featured) + the harvest -->
+        <div class="mt-4 grid gap-4 sm:grid-cols-3 lg:mt-5 lg:gap-5">
+          <figure class="overflow-hidden sm:col-span-2">
+            <img
+              src="/assets/pictures/foraging_a.jpg"
+              alt=""
+              loading="lazy"
+              class="aspect-[3/2] h-full w-full object-cover object-[50%_35%] sm:aspect-auto sm:min-h-[320px]"
+            />
+          </figure>
+          <figure class="overflow-hidden">
+            <img
+              src="/assets/pictures/foraging_b.jpg"
+              alt=""
+              loading="lazy"
+              class="aspect-[3/2] h-full w-full object-cover sm:aspect-auto object-[45%_50%]"
+            />
+          </figure>
+        </div>
       </div>
     </section>
 

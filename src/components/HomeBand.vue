@@ -19,6 +19,8 @@ withDefaults(
     links?: { to: string; label: string }[]
     framed?: boolean
     arch?: boolean
+    imagePosition?: string
+    imageAspect?: string
     extra?: { kicker: string; title: string; body: string; ctaLabel: string; ctaTo: string }
   }>(),
   { reverse: false, tint: false },
@@ -45,6 +47,7 @@ withDefaults(
               :src="image"
               alt=""
               loading="lazy"
+              :style="{ objectPosition: imagePosition, aspectRatio: imageAspect }"
               class="aspect-[3/4] w-full object-cover transition duration-700 hover:scale-105"
             />
           </div>
