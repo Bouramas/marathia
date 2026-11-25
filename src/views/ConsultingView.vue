@@ -78,18 +78,20 @@ useSeo(() => {
           <div
             v-for="(p, i) in c.principles"
             :key="i"
-            class="group flex flex-col border border-brand/30 bg-white p-6 transition-colors duration-300 hover:border-brand"
+            class="group flex flex-row items-start gap-4 border border-brand/30 bg-white p-4 transition-colors duration-300 hover:border-brand sm:flex-col sm:gap-0 sm:p-6"
           >
-            <span class="display block text-3xl font-light leading-none text-brand">{{ num(i) }}</span>
-            <span class="my-4 block h-px w-9 bg-rule transition-all duration-500 group-hover:w-16 group-hover:bg-brand"></span>
-            <p class="text-base font-light leading-snug">{{ pick(p) }}</p>
-            <RouterLink
-              v-if="c.principleLinks[i] && pathForKey(c.principleLinks[i].key, locale)"
-              :to="pathForKey(c.principleLinks[i].key, locale)!"
-              class="label-kicker mt-4 text-xs text-brand hover:underline"
-            >
-              {{ pick(c.principleLinks[i].label) }} →
-            </RouterLink>
+            <span class="display block w-9 shrink-0 text-2xl font-light leading-none text-brand sm:w-auto sm:text-3xl">{{ num(i) }}</span>
+            <span class="my-4 hidden h-px w-9 bg-rule transition-all duration-500 group-hover:w-16 group-hover:bg-brand sm:block"></span>
+            <div class="min-w-0 flex-1">
+              <p class="text-base font-light leading-snug">{{ pick(p) }}</p>
+              <RouterLink
+                v-if="c.principleLinks[i] && pathForKey(c.principleLinks[i].key, locale)"
+                :to="pathForKey(c.principleLinks[i].key, locale)!"
+                class="label-kicker mt-3 block text-xs text-brand hover:underline sm:mt-4"
+              >
+                {{ pick(c.principleLinks[i].label) }} →
+              </RouterLink>
+            </div>
           </div>
         </div>
 

@@ -28,6 +28,25 @@ const SEASONS = L('Μάρτιο-Ιούνιο και Σεπτέμβριο-Νοέ�
 /* ------------------------------------------------------------------ */
 
 export const workshops = {
+  headerImage: {
+    src: '/assets/pictures/restaurant/workshops_kitchen_plating.jpg',
+    w: 1551,
+    h: 2326,
+    alt: L(
+      'Μάγειρες της Μαραθιάς πλατάρουν ταρτάρ σε πέτρινα πιάτα στην κουζίνα',
+      'Marathia chefs plating tartare on stone plates in the kitchen',
+    ),
+  },
+  bandImage: {
+    src: '/assets/pictures/restaurant/workshops_kitchen_chef.jpg',
+    w: 2400,
+    h: 1600,
+    alt: L('Σεφ της Μαραθιάς πλατάρει σαλάτα στην κουζίνα', 'A Marathia chef plating a salad in the kitchen'),
+  },
+  seoDescription: L(
+    'Τριήμερα βιωματικά εργαστήρια στην Τήνο για επαγγελματίες της γαστρονομίας, μέσα στην κουζίνα της Μαραθιάς. Μάρτιο-Ιούνιο και Σεπτέμβριο-Νοέμβριο.',
+    'Three-day hands-on workshops in the Marathia kitchen on Tinos for gastronomy professionals. Held March-June and September-November.',
+  ),
   intro: L(
     'Η ομάδα της Μαραθιάς σχεδιάζει και υλοποιεί τριήμερα βιωματικά εργαστήρια στην Τήνο, που απευθύνονται στους επαγγελματίες του χώρου της γαστρονομίας από όλη την Ελλάδα και το εξωτερικό.',
     'Marathia designs and holds three-day experiential workshops aimed at gastronomy professionals from all over Greece and abroad.',
