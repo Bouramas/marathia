@@ -141,7 +141,10 @@ async function onSubmit() {
   if (ok) {
     sent.value = { ...form }
     toast.push(t('form.success'), 'success')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    })
   } else {
     toast.push(t('booking.submitError'), 'error', 8000)
   }

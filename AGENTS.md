@@ -130,6 +130,7 @@ home ×1, ~23 pages, 9 menu dishes, 6 testimonials;
   has a content `key` + `{el,en}` label, hrefs via `pathForKey`), consumed by
   `AppHeader.vue`/`AppFooter.vue`. `src/content/nav.ts` (old DB menus) is no longer imported;
   don't edit it for nav changes.
+- **Page transitions:** `App.vue` wraps `RouterView` in `<Transition name="page" mode="out-in">` (fade, classes in `style.css`). `src/router/scroll.ts` defers the scroll reset until the new view is inserted (invisible), so there is no visible scroll jump; hash anchors scroll smoothly. Don't re-add global `scroll-behavior: smooth`. Motion respects `prefers-reduced-motion`.
 - `router.afterEach` sets a `robots` meta tag: `index,follow` default;
   `noindex,nofollow` for 404 and **unreviewed English pages** (`enReviewed:false`).
 - **Analytics:** Google Tag Manager `GTM-KVFMRB9C` is hard-coded in `index.html` (head + noscript), loaded immediately with no consent banner by decision. The privacy policy (`privacy-policy`, `src/content/pages/privacy-policy.ts`, footer link) discloses it; update it if tags/vendors change. Consider a consent banner for EU ePrivacy compliance.

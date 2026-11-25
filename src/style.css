@@ -35,7 +35,8 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    /* No global smooth scrolling: route changes reset scroll invisibly (src/router/scroll.ts);
+       hash anchors opt in to smooth scrolling there. */
     background-color: #fff; /* overscroll area below the footer blends with its white end */
   }
   body {
@@ -100,5 +101,38 @@
   }
   .prose-marathia :where(img) {
     @apply rounded-sm;
+  }
+}
+
+/* Route transition (App.vue): quick fade out, slightly longer fade-in with a small rise.
+   Opacity/transform only, so there is no layout shift. */
+.page-leave-active {
+  transition: opacity 0.15s ease-in;
+}
+.page-enter-active {
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+}
+.page-leave-to {
+  opacity: 0;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active,
+  .page-leave-active {
+    transition: none;
+  }
+  .page-enter-from {
+    transform: none;
+  }
+  .animate-bounce {
+    animation: none;
+  }
+  img {
+    transition: none !important;
+    transform: none !important;
   }
 }

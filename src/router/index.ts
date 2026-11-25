@@ -5,6 +5,7 @@ import { canonicalBase } from '@/composables/usePages'
 import { localePath } from '@/composables/useLocale'
 import { useUiStore } from '@/stores/ui'
 import retired from '@/site/retired.json'
+import { scrollBehavior } from './scroll'
 
 // Retired pages: no canonical route of their own; their old URLs redirect to the
 // canonical base of the page that absorbed them (e.g. the empty /tinos landing →
@@ -120,9 +121,7 @@ routes.push({ path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundVi
 export const router = createRouter({
   history: createWebHistory(),
   routes,
-  scrollBehavior(_to, _from, saved) {
-    return saved || { top: 0 }
-  },
+  scrollBehavior,
 })
 
 router.beforeEach((to) => {
